@@ -51,10 +51,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSalir = findViewById(R.id.btnSalir);
 
         //llenamos tablas usuarios, ubicaciones y empresas
-        dbstart = new consultas_db(this, "administracion", null, 1);
-        dbstart.RegistrarUsuarios();
+        dbstart = new consultas_db(this, "Inventarios", null, 1);
+        dbstart.ExisteTabla();
+        /*dbstart.RegistrarUsuarios();
         dbstart.RegistrarEmpresas();
-        dbstart.RegistrarUbicaciones();
+        dbstart.RegistrarUbicaciones();*/
 
         String[] opciones = {"Transito", "Patio", "Piso", "E1", "E2", "E3", "Taller", "HyP", "Seminuevos", "Previas", "Esquina Rio Fte",
                 "Culican", "Guasave", "Otro distribuidor"};
@@ -113,9 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mes = cal.get(Calendar.MONTH);
         anio = cal.get(Calendar.YEAR);
         //agregar cero a los días antes del 10 y a los meses antes del 10
-        /*Log.d("DIA:==",String.valueOf(dia));
-        Log.d("MES:==",String.valueOf(mes));
-        Log.d("ANIO:==",String.valueOf(anio));*/
+        /*Log.d("DIA:==",String.valueOf(dia));*/
 
         DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void guardar(View view) {
 
         //administracion es el nombre de la bd en SQlite
-        consultas_db admin = new consultas_db(this, "administracion", null, 1);
+        consultas_db admin = new consultas_db(this, "Inventarios", null, 1);
 
         //POR AHORA ENVIAREMOS MANUALMENTE EL ID USUARIO, EMPRESA, SUCURSAL
         int Id_usuario = 1;

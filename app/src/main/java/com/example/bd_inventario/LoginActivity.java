@@ -18,6 +18,9 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+            //validar si existe la Bd..
+            //toast enviar
+        //crear variable, verificar con variable,
 
         btnIniciar = findViewById(R.id.btnIniciar);
         txtLogin = findViewById(R.id.txtLogin);

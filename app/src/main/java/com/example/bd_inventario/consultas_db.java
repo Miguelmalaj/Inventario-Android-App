@@ -2,12 +2,15 @@ package com.example.bd_inventario;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +45,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             bd.close();
             return resultBd;
 
-        }catch(SQLiteConstraintException e){
+        }catch(SQLiteException e){
             Log.d("ENTRO EN CATCH: ","ENTRAMOS AL CATCH");
 
             return resultBd;
@@ -93,7 +96,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
 
             bd.close();
 
-        }catch (Exception e){
+        }catch (SQLiteException e){
             Log.d("CATCH EXCEPTION USERS: ","exception threw");
         }
     }
@@ -136,7 +139,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
 
             bd.close();
 
-        }catch(Exception e){
+        }catch(SQLiteException e){
 
         }
 
@@ -146,6 +149,28 @@ public class consultas_db extends AdminSQLiteOpenHelper{
     public void RegistrarUbicaciones(){
         Log.d("Registrar Ubicaciones:==", "tabla ubicaciones creada.");
 
+    }
+
+    public void ExisteTabla(){
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            Cursor cursor = bd.rawQuery("SELECT count(*) FROM Usuarios", null);
+            cursor.moveToFirst();
+            if(cursor.getInt(0) > 0){
+
+                Log.d("Hay registros en tabla usuarios: ","exists");
+            }
+
+            bd.close();
+
+
+        }catch(SQLiteException e){
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
 }
