@@ -22,6 +22,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btnFecha;
+    Button btnSalir;
     EditText txtFecha;
     Spinner spubicacion;
     Button btnguardar;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnguardar = findViewById(R.id.btnguardar);
         btnscan = findViewById(R.id.btnScaner);
         txtVin = findViewById(R.id.txtVin);
+
+        btnSalir = findViewById(R.id.btnSalir);
 
         //llenamos tablas usuarios, ubicaciones y empresas
         dbstart = new consultas_db(this, "administracion", null, 1);
@@ -87,6 +90,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 integrador.initiateScan();
             }
         });
+
+        btnSalir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cerrarSesion();
+            }
+        });
+    }
+
+    public void cerrarSesion(){
+        Intent log_out = new Intent(this,LoginActivity.class);
+        startActivity(log_out);
     }
 
 

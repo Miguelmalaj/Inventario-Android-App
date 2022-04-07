@@ -49,8 +49,8 @@
         android:id="@+id/btnguardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginBottom="188dp"
         android:onClick="guardar"
         android:text="Guardar"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,5 +77,14 @@
         android:maxLength="17"
         app:layout_constraintStart_toEndOf="@+id/btnScaner"
         app:layout_constraintTop_toBottomOf="@+id/spubicacion" />
+
+    <Button
+        android:id="@+id/btnSalir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="619dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
