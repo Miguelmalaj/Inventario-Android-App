@@ -156,7 +156,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             SQLiteDatabase bd = this.getWritableDatabase();
             Cursor cursor = bd.rawQuery("SELECT count(*) FROM Usuarios", null);
             cursor.moveToFirst();
-            if(cursor.getInt(0) > 0){
+            if(cursor.getCount() > 0){
 
                 Log.d("Hay registros en tabla usuarios: ","exists");
             }
