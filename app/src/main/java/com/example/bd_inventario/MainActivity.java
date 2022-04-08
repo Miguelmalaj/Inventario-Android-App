@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Spinner spubica;
     //variable global para selección de ubicación
     String ubication_selected;
+    Bundle bundleUsuario;
+    Usuario userLogged;
 //    consultas_db dbstart;
 //    boolean registrosEntabla;
 
@@ -51,7 +53,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtVin = findViewById(R.id.txtVin);
 
         btnSalir = findViewById(R.id.btnSalir);
+        bundleUsuario = getIntent().getExtras();
 
+        if(bundleUsuario != null){
+            userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
+            Log.d("VALORES pasados a PANTALLA MAIN CON BUNDLE...:==","BUNDLE");
+            Log.d("Nombre_usuario:==",userLogged.getNombre().toString());
+            Log.d("Empresa:==",userLogged.getEmpresa().toString());
+            Log.d("Sucursal:==",userLogged.getSucursal().toString());
+        }
 
         String[] opciones = {"Transito", "Patio", "Piso", "E1", "E2", "E3", "Taller", "HyP", "Seminuevos", "Previas", "Esquina Rio Fte",
                 "Culican", "Guasave", "Otro distribuidor"};

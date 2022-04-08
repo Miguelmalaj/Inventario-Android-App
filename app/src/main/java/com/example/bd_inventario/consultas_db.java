@@ -195,10 +195,10 @@ public class consultas_db extends AdminSQLiteOpenHelper{
         return existeusuario;
     }
 
-    public void getDatosUsuarioBD(String nombreusuario, String clave){
+    public Bundle getDatosUsuarioBD(String nombreusuario, String clave){
         Usuario usuario;
-        Bundle datosUsuario = new Bundle();
-        boolean peticion = false;
+        Bundle bundleUsuario = new Bundle();
+//        boolean peticion = false;
 
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
@@ -212,14 +212,15 @@ public class consultas_db extends AdminSQLiteOpenHelper{
                 String Empresa = cursor.getString(1);
                 String Sucursal = cursor.getString(2);
 
-                Log.d("Nombre_usuario:==",String.valueOf(Nombre_usuario));
+                /*Log.d("Nombre_usuario:==",String.valueOf(Nombre_usuario));
                 Log.d("Empresa:==",String.valueOf(Empresa));
-                Log.d("Sucursal:==",String.valueOf(Sucursal));
+                Log.d("Sucursal:==",String.valueOf(Sucursal));*/
 
                 //1.-crear el objeto usuario
                 //2.-poner el objeto usuario en el Bundle
                 //3.-Retornar el bundle
-                Usuario user = new Usuario(Nombre_usuario, Empresa, Sucursal);
+                usuario = new Usuario(Nombre_usuario, Empresa, Sucursal);
+                bundleUsuario.putSerializable("usuario", usuario);
 
             }
             bd.close();
@@ -233,7 +234,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             }
         }
 
-//        return datosUsuario;
+        return bundleUsuario;
     }
 
 }

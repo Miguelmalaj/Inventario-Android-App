@@ -74,11 +74,27 @@ public class LoginActivity extends AppCompatActivity{
             return;
             }
 
-            dbstart.getDatosUsuarioBD(nombre.trim(), clave.trim());
+            Bundle bundleUsuario = new Bundle();
+            Usuario user = null;
 
-            //si existen las credenciales en la bd, enviamos a la pantalla princiapl
-            Intent log_in = new Intent(this,MainActivity.class);
-            startActivity(log_in);
+            bundleUsuario = dbstart.getDatosUsuarioBD(nombre.trim(), clave.trim());
+
+            if(bundleUsuario != null){
+
+                /*user = (Usuario) bundleUsuario.getSerializable("usuario");
+                Log.d("VALORES RETORNADOS CON BUNDLE...:==","BUNDLE");
+                Log.d("Nombre_usuario:==",user.getNombre().toString());
+                Log.d("Empresa:==",user.getEmpresa().toString());
+                Log.d("Sucursal:==",user.getSucursal().toString());*/
+
+                //si existen las credenciales en la bd, enviamos a la pantalla princiapl
+                Intent log_in = new Intent(this,MainActivity.class);
+                log_in.putExtras(bundleUsuario);
+
+                startActivity(log_in);
+
+            }
+
         }
 
     }
