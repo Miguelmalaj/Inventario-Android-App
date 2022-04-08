@@ -171,4 +171,27 @@ public class consultas_db extends AdminSQLiteOpenHelper{
         return existeregistro;
     }
 
+    public boolean autenticar(String nombreusuario, String clave){
+        boolean existeusuario = false;
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+
+            Cursor cursor = bd.rawQuery(
+                    "SELECT Nombre_usuario, Clave FROM Usuarios WHERE Nombre_usuario='"+ nombreusuario +"' AND Clave='"+clave+"'",null
+            );
+
+            if(cursor.moveToFirst()) existeusuario = true;
+            bd.close();
+
+
+        }catch(SQLiteException e){
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return existeusuario;
+    }
+
 }

@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Método para guardar datos
     public void guardar(View view) {
-
         //Inventarios es el nombre de la bd en SQlite
         consultas_db admin = new consultas_db(this, "Inventarios", null, 1);
 
@@ -170,8 +169,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "El registro ya existe en la BD", Toast.LENGTH_LONG).show();
 
                }
-
-
 
         } else {
             //  Log.d("no validado","no validado");
