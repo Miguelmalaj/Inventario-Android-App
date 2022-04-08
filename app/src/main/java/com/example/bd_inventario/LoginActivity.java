@@ -66,11 +66,16 @@ public class LoginActivity extends AppCompatActivity{
         if(clave.length() == 0) Toast.makeText(this, "Debes ingresar una contraseña", Toast.LENGTH_LONG).show();
         if(nombre.length() != 0  && clave.length() != 0){
             Toast.makeText(this, "Credenciales correctas", Toast.LENGTH_LONG).show();
+
+
             boolean existeusuarioBD = dbstart.autenticar(nombre.trim(), clave.trim());
             if(!existeusuarioBD){
                 Toast.makeText(this, "Las credenciales no son correctas", Toast.LENGTH_LONG).show();
             return;
             }
+
+            dbstart.getDatosUsuarioBD(nombre.trim(), clave.trim());
+
             //si existen las credenciales en la bd, enviamos a la pantalla princiapl
             Intent log_in = new Intent(this,MainActivity.class);
             startActivity(log_in);
