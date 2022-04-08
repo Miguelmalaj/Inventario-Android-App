@@ -6,15 +6,26 @@ public class Usuario implements Serializable{
     private String clave;
     private String empresa;
     private String sucursal;
+    private String id_usuario;
+
 
     public Usuario() {
 
     }
 
-    public Usuario(String nombre, String empresa, String sucursal){
+    public Usuario(String id_usuario, String nombre, String empresa, String sucursal){
         this.nombre = nombre;
         this.empresa = empresa;
         this.sucursal = sucursal;
+        this.id_usuario = id_usuario;
+    }
+
+    public String getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(String id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
     public String getEmpresa() {

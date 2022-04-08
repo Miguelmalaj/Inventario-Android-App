@@ -204,13 +204,14 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             SQLiteDatabase bd = this.getWritableDatabase();
 
             Cursor cursor = bd.rawQuery(
-                    "SELECT Nombre_usuario, Empresa, Sucursal FROM Usuarios WHERE Nombre_usuario='"+ nombreusuario +"' AND Clave='"+clave+"'",null
+                    "SELECT Id_usuario, Nombre_usuario, Empresa, Sucursal FROM Usuarios WHERE Nombre_usuario='"+ nombreusuario +"' AND Clave='"+clave+"'",null
             );
 
             if(cursor.moveToFirst()){
-                String Nombre_usuario = cursor.getString(0);
-                String Empresa = cursor.getString(1);
-                String Sucursal = cursor.getString(2);
+                String Id_usuario = cursor.getString(0);
+                String Nombre_usuario = cursor.getString(1);
+                String Empresa = cursor.getString(2);
+                String Sucursal = cursor.getString(3);
 
                 /*Log.d("Nombre_usuario:==",String.valueOf(Nombre_usuario));
                 Log.d("Empresa:==",String.valueOf(Empresa));
@@ -219,7 +220,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
                 //1.-crear el objeto usuario
                 //2.-poner el objeto usuario en el Bundle
                 //3.-Retornar el bundle
-                usuario = new Usuario(Nombre_usuario, Empresa, Sucursal);
+                usuario = new Usuario(Id_usuario, Nombre_usuario, Empresa, Sucursal);
                 bundleUsuario.putSerializable("usuario", usuario);
 
             }

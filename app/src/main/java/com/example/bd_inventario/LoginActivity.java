@@ -1,15 +1,14 @@
 package com.example.bd_inventario;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity{
 
@@ -30,9 +29,9 @@ public class LoginActivity extends AppCompatActivity{
         edtxtClave = findViewById(R.id.edtxtClave);
 
         //validar si existe la Bd
-        //crear variable, verificar con variable,
         dbstart = new consultas_db(this, "Inventarios", null, 1);
         registrosEntabla = dbstart.ExisteRegistrosEnTabla();
+
         if(!registrosEntabla){
             //creamos registros en tablas usuarios, ubicaciones y empresas
             dbstart.RegistrarUsuarios();
@@ -44,60 +43,43 @@ public class LoginActivity extends AppCompatActivity{
         btnIniciar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    PruebaInicio();
-//                IniciarSesion();
+//                    PruebaInicio();
+                IniciarSesion();
             }
         });
 
     }
 
     public void IniciarSesion(){
-        Intent log_in = new Intent(this,MainActivity.class);
-        startActivity(log_in);
-    }
-
-    public void PruebaInicio(){
+        Bundle bundleUsuario = new Bundle();
+        Usuario user = null;
         String nombre = edtxtNombre.getText().toString();
         String clave = edtxtClave.getText().toString();
-        /*Log.d("Nombre:==",String.valueOf(nombre));
-        Log.d("Cllave:==",String.valueOf(clave));*/
 
         if(nombre.length() == 0) Toast.makeText(this, "Debes ingresar un nombre de usuario", Toast.LENGTH_LONG).show();
         if(clave.length() == 0) Toast.makeText(this, "Debes ingresar una contraseña", Toast.LENGTH_LONG).show();
+
         if(nombre.length() != 0  && clave.length() != 0){
+
             Toast.makeText(this, "Credenciales correctas", Toast.LENGTH_LONG).show();
-
-
             boolean existeusuarioBD = dbstart.autenticar(nombre.trim(), clave.trim());
             if(!existeusuarioBD){
                 Toast.makeText(this, "Las credenciales no son correctas", Toast.LENGTH_LONG).show();
-            return;
+                return;
             }
-
-            Bundle bundleUsuario = new Bundle();
-            Usuario user = null;
 
             bundleUsuario = dbstart.getDatosUsuarioBD(nombre.trim(), clave.trim());
 
             if(bundleUsuario != null){
-
-                /*user = (Usuario) bundleUsuario.getSerializable("usuario");
-                Log.d("VALORES RETORNADOS CON BUNDLE...:==","BUNDLE");
-                Log.d("Nombre_usuario:==",user.getNombre().toString());
-                Log.d("Empresa:==",user.getEmpresa().toString());
-                Log.d("Sucursal:==",user.getSucursal().toString());*/
-
-                //si existen las credenciales en la bd, enviamos a la pantalla princiapl
                 Intent log_in = new Intent(this,MainActivity.class);
                 log_in.putExtras(bundleUsuario);
-
                 startActivity(log_in);
 
             }
-
         }
-
     }
+
+    public void PruebaInicio(){}
 
 
 

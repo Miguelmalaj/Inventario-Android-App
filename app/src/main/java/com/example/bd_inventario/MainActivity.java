@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(bundleUsuario != null){
             userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
-            Log.d("VALORES pasados a PANTALLA MAIN CON BUNDLE...:==","BUNDLE");
+            /*Log.d("VALORES pasados a PANTALLA MAIN CON BUNDLE...:==","BUNDLE");
             Log.d("Nombre_usuario:==",userLogged.getNombre().toString());
             Log.d("Empresa:==",userLogged.getEmpresa().toString());
-            Log.d("Sucursal:==",userLogged.getSucursal().toString());
+            Log.d("Sucursal:==",userLogged.getSucursal().toString());*/
         }
 
         String[] opciones = {"Transito", "Patio", "Piso", "E1", "E2", "E3", "Taller", "HyP", "Seminuevos", "Previas", "Esquina Rio Fte",
@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 ubication_selected = adapterView.getSelectedItem().toString();
-//                Log.d("VALOR SPINNER OnItemSelected: ",ubication_selected);
 
             }
 
@@ -150,15 +149,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         consultas_db admin = new consultas_db(this, "Inventarios", null, 1);
 
         //POR AHORA ENVIAREMOS MANUALMENTE EL ID USUARIO, EMPRESA, SUCURSAL
-        int Id_usuario = 1;
-        int Empresa = 1;
-        int Sucursal = 1;
+        int Id_usuario = Integer.parseInt(userLogged.getId_usuario().toString());
+        int Empresa = Integer.parseInt(userLogged.getEmpresa().toString());
+        int Sucursal = Integer.parseInt(userLogged.getSucursal().toString());
 
         // Alta de variables para guardar en la base de datos
         String fecha_db = txtFecha.getText().toString();
         String ubicacion_db = ubication_selected;
         String Vin_db = txtVin.getText().toString();
-        // ------ termina alta de variables para base de datos
+
 
         if ((!fecha_db.isEmpty()) && (!ubicacion_db.isEmpty()) && (!Vin_db.isEmpty())) {
 
