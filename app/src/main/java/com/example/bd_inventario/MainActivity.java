@@ -3,6 +3,7 @@ package com.example.bd_inventario;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //variable global para selección de ubicación
     String ubication_selected;
     consultas_db dbstart;
+    boolean registrosEntabla;
 
 
     @Override
@@ -52,10 +54,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //llenamos tablas usuarios, ubicaciones y empresas
         dbstart = new consultas_db(this, "Inventarios", null, 1);
-        dbstart.ExisteTabla();
-        /*dbstart.RegistrarUsuarios();
-        dbstart.RegistrarEmpresas();
-        dbstart.RegistrarUbicaciones();*/
+        registrosEntabla = dbstart.ExisteRegistrosEnTabla();
+
+        if(!registrosEntabla){
+            Log.d("REGISTRAMOS TABLAS:==", "REGISTRAMOS TABLAS.");
+            dbstart.RegistrarUsuarios();
+            dbstart.RegistrarEmpresas();
+            dbstart.RegistrarUbicaciones();
+        }
+            Log.d("NO REGISTRAMOS TABLAS:==", "YA EXISTEN REGISTROS.");
+
 
         String[] opciones = {"Transito", "Patio", "Piso", "E1", "E2", "E3", "Taller", "HyP", "Seminuevos", "Previas", "Esquina Rio Fte",
                 "Culican", "Guasave", "Otro distribuidor"};

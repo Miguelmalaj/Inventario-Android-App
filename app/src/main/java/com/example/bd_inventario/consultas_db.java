@@ -151,18 +151,15 @@ public class consultas_db extends AdminSQLiteOpenHelper{
 
     }
 
-    public void ExisteTabla(){
+    public boolean ExisteRegistrosEnTabla(){
+        boolean existeregistro = false;
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
-            Cursor cursor = bd.rawQuery("SELECT count(*) FROM Usuarios", null);
-            cursor.moveToFirst();
-            if(cursor.getCount() > 0){
-
-                Log.d("Hay registros en tabla usuarios: ","exists");
-            }
-
+            Cursor cursor = bd.rawQuery("SELECT * FROM Usuarios", null);
+//            cursor.moveToFirst(); == se va al primer registro en caso de existencia
+//            if(cursor.getCount() == cuenta el total de registros obtenidos
+            if(cursor.moveToFirst()) existeregistro =true;
             bd.close();
-
 
         }catch(SQLiteException e){
             try {
@@ -171,6 +168,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
                 e1.printStackTrace();
             }
         }
+        return existeregistro;
     }
 
 }
