@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnFecha;
     Button btnSalir;
     EditText txtFecha;
-    Spinner spubicacion;
+//    Spinner spubicacion;
     Button btnguardar;
     Button btnscan;
     EditText txtVin;
@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Spinner spubica;
     //variable global para selección de ubicación
     String ubication_selected;
-    consultas_db dbstart;
-    boolean registrosEntabla;
+//    consultas_db dbstart;
+//    boolean registrosEntabla;
 
 
     @Override
@@ -51,18 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtVin = findViewById(R.id.txtVin);
 
         btnSalir = findViewById(R.id.btnSalir);
-
-        //llenamos tablas usuarios, ubicaciones y empresas
-        dbstart = new consultas_db(this, "Inventarios", null, 1);
-        registrosEntabla = dbstart.ExisteRegistrosEnTabla();
-
-        if(!registrosEntabla){
-            Log.d("REGISTRAMOS TABLAS:==", "REGISTRAMOS TABLAS.");
-            dbstart.RegistrarUsuarios();
-            dbstart.RegistrarEmpresas();
-            dbstart.RegistrarUbicaciones();
-        }
-            Log.d("NO REGISTRAMOS TABLAS:==", "YA EXISTEN REGISTROS.");
 
 
         String[] opciones = {"Transito", "Patio", "Piso", "E1", "E2", "E3", "Taller", "HyP", "Seminuevos", "Previas", "Esquina Rio Fte",
@@ -149,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Método para guardar datos
     public void guardar(View view) {
 
-        //administracion es el nombre de la bd en SQlite
+        //Inventarios es el nombre de la bd en SQlite
         consultas_db admin = new consultas_db(this, "Inventarios", null, 1);
 
         //POR AHORA ENVIAREMOS MANUALMENTE EL ID USUARIO, EMPRESA, SUCURSAL
