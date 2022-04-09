@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if ((!fecha_db.isEmpty()) && (!ubicacion_db.isEmpty()) && (!Vin_db.isEmpty())) {
-
                 //validar si el registro se realiza correctamente
                 Long resultado_registro = admin.RegistrarInventario(
                         fecha_db,

@@ -45,15 +45,14 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper{
                         "Nombre text)"
           );
 
-          /*
           //crear tabla Ubicaciones
           BaseDeDatos.execSQL(
             "create table Ubicaciones(" +
                         "Id_ubicacion integer primary key autoincrement, " +
-                        "Nombre_ubicacion text unique," +
+                        "Nombre_ubicacion text," +
                         "Empresa integer, " +
                         "Sucursal integer)"
-          );*/
+          );
 
     }
 
