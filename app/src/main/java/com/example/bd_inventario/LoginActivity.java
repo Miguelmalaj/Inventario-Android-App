@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity{
             dbstart.RegistrarUsuarios();
             dbstart.RegistrarEmpresas();
             dbstart.RegistrarUbicaciones();
-            Toast.makeText(this, "Las tablas han sido creadas en BD correctamente.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "BD ha sido creada correctamente.", Toast.LENGTH_LONG).show();
         }
 
         btnIniciar.setOnClickListener(new View.OnClickListener() {

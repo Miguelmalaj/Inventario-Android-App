@@ -161,7 +161,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             SQLiteDatabase bd = this.getWritableDatabase();
             ContentValues registro = new ContentValues();
 
-            //ubicaciones agencia los mochis
+            //UBICACIONES AGENCIA LOS MOCHIS
             registro.put("Nombre_ubicacion","PREVIAS");
             registro.put("Empresa",1);
             registro.put("Sucursal",1);
@@ -702,9 +702,69 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
+            //UBICACIONES AGENCIA ZAPATA
+            registro.put("Nombre_ubicacion","ZAPATA EST SUPERIOR");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","TRANSITO AEROPUERTO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","PATIO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","ZAPATA PISO DE EXH");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","EXHIB PLAZA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","TRANSITO ZAPATA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","ZAPATA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","AEROPUERTO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","ZAPATA FLOT");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","ZAPATA PATIO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","EN SEMINUEVOS ZAPATA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","EN SEMINUEVOS AEROPUERTO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
 
 
-            //ubicaciones agencia zapata
+
 
             bd.close();
 
