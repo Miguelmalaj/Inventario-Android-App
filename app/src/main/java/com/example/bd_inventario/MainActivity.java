@@ -2,6 +2,7 @@ package com.example.bd_inventario;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -66,12 +69,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String[] opciones = {"Transito", "Patio", "Piso", "E1", "E2", "E3", "Taller", "HyP", "Seminuevos", "Previas", "Esquina Rio Fte",
                 "Culican", "Guasave", "Otro distribuidor"};
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, opciones);
+
+
+        List<Ubicaciones> listaUbicacionesUsuario = llenarUbicaciones();
+
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, opciones);
+        ArrayAdapter<Ubicaciones> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, listaUbicacionesUsuario);
 
         spubica.setAdapter(adapter);
 
         //método que está a la escucha de la ubicación seleccionada por el usuario
         spubica.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 ubication_selected = adapterView.getSelectedItem().toString();
@@ -203,6 +212,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.onActivityResult(requestCode, resultCode, data);
         }
 
+    }
+
+    private List<Ubicaciones> llenarUbicaciones(){
+        int Empresa = Integer.parseInt(userLogged.getEmpresa().toString());
+        int Sucursal = Integer.parseInt(userLogged.getSucursal().toString());
+
+        List<Ubicaciones> listaUbi = new ArrayList<>();
+        consultas_db queryUbi = new consultas_db(this, "Inventarios", null, 1);
+        Cursor cursor = queryUbi.getUbicaciones(Empresa, Sucursal);
+        if(cursor != null){
+            if(cursor.moveToFirst()){
+                do{
+                    Ubicaciones ubi = new Ubicaciones();
+                    ubi.setNombre_ubicacion(cursor.getString(0));
+                    listaUbi.add(ubi);
+                } while(cursor.moveToNext());
+            }
+        }
+        queryUbi.close();
+        return listaUbi;
     }
 
 }

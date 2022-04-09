@@ -764,8 +764,6 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             bd.insert("Ubicaciones",null,registro);
 
 
-
-
             bd.close();
 
         }catch (SQLiteException e){
@@ -862,6 +860,29 @@ public class consultas_db extends AdminSQLiteOpenHelper{
         }
 
         return bundleUsuario;
+    }
+
+    public Cursor getUbicaciones(int Empresa, int Sucursal){
+
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            Cursor filas = bd.rawQuery(
+                    "SELECT Nombre_ubicacion FROM Ubicaciones WHERE Empresa="+Empresa+" AND Sucursal="+Sucursal+"",null
+            );
+
+            if(filas.moveToFirst()){
+
+                return filas;
+            }else{
+
+                return null;
+            }
+
+        }catch(SQLiteException e){
+
+            return null;
+        }
+
     }
 
 }
