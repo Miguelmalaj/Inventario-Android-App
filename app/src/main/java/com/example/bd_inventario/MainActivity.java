@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String ubication_selected;
     Bundle bundleUsuario;
     Usuario userLogged;
+    TextView nombreAgencia;
 //    consultas_db dbstart;
 //    boolean registrosEntabla;
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnguardar = findViewById(R.id.btnguardar);
         btnscan = findViewById(R.id.btnScaner);
         txtVin = findViewById(R.id.txtVin);
+        nombreAgencia = findViewById(R.id.txtAgencia);
 
         btnSalir = findViewById(R.id.btnSalir);
         bundleUsuario = getIntent().getExtras();
@@ -66,10 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("Sucursal:==",userLogged.getSucursal().toString());*/
         }
 
-        String[] opciones = {"Transito", "Patio", "Piso", "E1", "E2", "E3", "Taller", "HyP", "Seminuevos", "Previas", "Esquina Rio Fte",
-                "Culican", "Guasave", "Otro distribuidor"};
-
-
+        setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
 
         List<Ubicaciones> listaUbicacionesUsuario = llenarUbicaciones();
 
@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent log_out = new Intent(this,LoginActivity.class);
         startActivity(log_out);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -232,6 +231,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         queryUbi.close();
         return listaUbi;
+    }
+
+    public void setNombreAgencia(int Empresa, int Sucursal){
+        consultas_db bdagencia = new consultas_db(this, "Inventarios", null, 1);
+
+        String nomAgencia = bdagencia.getNombreAgencia(Empresa, Sucursal);
+        nombreAgencia.setText(nomAgencia);
     }
 
 }

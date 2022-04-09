@@ -885,4 +885,29 @@ public class consultas_db extends AdminSQLiteOpenHelper{
 
     }
 
+    public String getNombreAgencia(int Empresa, int Sucursal){
+        String agencia = "";
+
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            Cursor cursor = bd.rawQuery(
+                    "SELECT Nombre FROM Empresas WHERE Empresa="+Empresa+" AND Sucursal="+Sucursal+"",null
+            );
+
+            if(cursor.moveToFirst()){
+                agencia = cursor.getString(0);
+            }
+            bd.close();
+
+        }catch(SQLiteException e){
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+        return agencia;
+    }
+
 }
