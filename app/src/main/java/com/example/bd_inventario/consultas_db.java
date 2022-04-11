@@ -763,6 +763,73 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
+            //=================================================================
+            //==============UBICACIONES AGENCIA GUASAVE========================
+            //=================================================================
+            registro.put("Nombre_ubicacion","PREVIAS");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","BODEGA");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","CARROCERIA");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","PISO");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","PATIO");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","SALA EXHIBICION");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","TRANSITO");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","E1");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","E2");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","E3");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","TALLER");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","HYP");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","SEMINUEVOS");
+            registro.put("Empresa",3);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
 
             bd.close();
 
