@@ -22,7 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.bd_inventario.Retrofit.Utilidades;
 import com.example.bd_inventario.Retrofit.apiRest;
 import com.example.bd_inventario.entidades.Usuarios;
+import com.example.bd_inventario.entidades.UsuariosEnviados;
 import com.example.bd_inventario.response.responseGetUsuarios;
+import com.example.bd_inventario.response.responsePostUsuarios;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -171,6 +173,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
 
+                /*
+                METODO GET USUARIOS========================================================
+
                 mAPIService.obtenerUsuarios().enqueue(new Callback<responseGetUsuarios>() {
                     @Override
                     public void onResponse(Call<responseGetUsuarios> call, Response<responseGetUsuarios> response) {
@@ -188,12 +193,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d("pruebaREST", "faallo");
                     }
                 });
+                METODO GET USUARIOS========================================================
+
+                */
+
+                //METODO POST USUARIOS
+                mAPIService.agregarUsuarios(new UsuariosEnviados("androiduser","12345",1))
+                        .enqueue(new Callback<responsePostUsuarios>() {
+                            @Override
+                            public void onResponse(Call<responsePostUsuarios> call, Response<responsePostUsuarios> response) {
+                                Gson objetoConsola = new Gson();
+                                Log.i("POST=REST", objetoConsola.toJson(response.body()));
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<responsePostUsuarios> call, Throwable t) {
+                                Log.i("POST=REST", "there was an error");
+                            }
+                        });
 
 
 
 
 
-                /*  ULTIMA PRUEBA FUNCIONAL
+                /*  ULTIMA PRUEBA FUNCIONAL de otro tuto
 
 
                 Retrofit retrofit = new Retrofit.Builder()
