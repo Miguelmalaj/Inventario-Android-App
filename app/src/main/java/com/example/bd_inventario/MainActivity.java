@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onFailure(Call<responseGetUsuarios> call, Throwable t) {
-
+                        Log.i("pruebaREST", "faallo");
                     }
                 });
 
