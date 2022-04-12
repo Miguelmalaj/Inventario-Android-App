@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //objeto api rest
-//        mAPIService = Utilidades.getAPIService();
+        mAPIService = Utilidades.getAPIService();
 
 
         /*RETROFIT FUNCIONANDO
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Log.i("pruebaREST", "clic");
+
                 mAPIService.obtenerUsuarios().enqueue(new Callback<responseGetUsuarios>() {
                     @Override
                     public void onResponse(Call<responseGetUsuarios> call, Response<responseGetUsuarios> response) {
@@ -186,10 +186,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onFailure(Call<responseGetUsuarios> call, Throwable t) {
                         Log.i("pruebaREST", "faallo");
                     }
-                });*/
+                });
 
 
 
+
+
+                /*  ULTIMA PRUEBA FUNCIONAL
 
 
                 Retrofit retrofit = new Retrofit.Builder()
@@ -226,12 +229,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d("data no leida 1", t.getMessage());
 
                     }
-                });
+                });*/
+
+
 
             }
         });
-
-
     }
 
     public void cerrarSesion(){

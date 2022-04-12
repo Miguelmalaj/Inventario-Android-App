@@ -12,6 +12,6 @@ public interface apiRest {
 
    @GET("api/usuarios/")
 //   @GET("comments/")
-//   Call<responseGetUsuarios> obtenerUsuarios();
-   public Call<List<Usuarios>> leerTodo();
+   Call<responseGetUsuarios> obtenerUsuarios();
+//   public Call<List<Usuarios>> leerTodo();
 }
