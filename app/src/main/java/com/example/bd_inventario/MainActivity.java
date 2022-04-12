@@ -17,6 +17,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bd_inventario.Retrofit.Utilidades;
+import com.example.bd_inventario.Retrofit.apiRest;
+import com.example.bd_inventario.entidades.Usuarios;
+import com.example.bd_inventario.response.responseGetUsuarios;
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -24,7 +29,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private apiRest mAPIService;
 
     Button btnFecha;
     Button btnSalir;
@@ -32,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    Spinner spubicacion;
     Button btnguardar;
     Button btnscan;
+    Button btnSync;
+
     EditText txtVin;
     private int dia, mes, anio;
     private Spinner spubica;
@@ -40,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Bundle bundleUsuario;
     Usuario userLogged;
     TextView nombreAgencia;
+
+
+
 //    consultas_db dbstart;
 //    boolean registrosEntabla;
 
@@ -59,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nombreAgencia = findViewById(R.id.txtAgencia);
 
         btnSalir = findViewById(R.id.btnSalir);
+        btnSync = findViewById(R.id.btnSync);
         bundleUsuario = getIntent().getExtras();
 
         if(bundleUsuario != null){
@@ -68,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("Empresa:==",userLogged.getEmpresa().toString());
             Log.d("Sucursal:==",userLogged.getSucursal().toString());*/
         }
+
+        //objeto api rest
+        mAPIService = Utilidades.getAPIService();
 
         setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
 
@@ -110,6 +130,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 cerrarSesion();
+            }
+        });
+
+        btnSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAPIService.obtenerUsuarios().enqueue(new Callback<responseGetUsuarios>() {
+                    @Override
+                    public void onResponse(Call<responseGetUsuarios> call, Response<responseGetUsuarios> response) {
+                        Gson objetoConsola = new Gson();
+                        for (Usuarios objeto: response.body().getUsuarios()) {
+                            Log.i("pruebaREST", objetoConsola.toJson(objeto));
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<responseGetUsuarios> call, Throwable t) {
+
+                    }
+                });
+
+
+
             }
         });
     }
