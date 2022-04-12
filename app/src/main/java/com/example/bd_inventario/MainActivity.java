@@ -206,6 +206,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onResponse(Call<List<Usuarios>> call, Response<List<Usuarios>> response) {
                         lista.clear();
                         lista.addAll(response.body());
+
+                        //PRUEBAS
+                        Gson objetoConsola = new Gson();
+                        for (Usuarios objeto: response.body()) {
+                            Log.i("pruebaREST", objetoConsola.toJson(objeto.getClave() + objeto.getNombre_usuario()));
+
+                        }
+                        //PRUEBAS
+
+
                         Log.d("data leida", "data leida");
                         Log.d("data leida", response.body().toString());
                     }

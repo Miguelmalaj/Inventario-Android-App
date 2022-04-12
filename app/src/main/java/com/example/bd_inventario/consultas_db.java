@@ -161,7 +161,10 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             SQLiteDatabase bd = this.getWritableDatabase();
             ContentValues registro = new ContentValues();
 
-            //UBICACIONES AGENCIA LOS MOCHIS
+
+            //=================================================================
+            //==============UBICACIONES AGENCIA LOS MOCHIS========================
+            //=================================================================
             registro.put("Nombre_ubicacion","PREVIAS");
             registro.put("Empresa",1);
             registro.put("Sucursal",1);
@@ -702,7 +705,10 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            //UBICACIONES AGENCIA ZAPATA
+
+            //=================================================================
+            //==============UBICACIONES AGENCIA ZAPATA========================
+            //=================================================================
             registro.put("Nombre_ubicacion","ZAPATA EST SUPERIOR");
             registro.put("Empresa",5);
             registro.put("Sucursal",1);
@@ -830,6 +836,88 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Empresa",3);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
+
+            //=================================================================
+            //==============UBICACIONES AGENCIA AEROPUERTO - CULICAN===========
+            //=================================================================
+            registro.put("Nombre_ubicacion","ZAPATA PISO DE EXH");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","TRANSITO ZAPATA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","TRANSITO AEROPUERTO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","EN SEMINUEVOS AEROPUERTO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","AEROPUERTO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","ZAPATA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","ZAPATA PATIO");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","EN SEMINUEVOS ZAPATA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","EXHIB PLAZA");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","ZAPATA EST SUPERIOR");
+            registro.put("Empresa",5);
+            registro.put("Sucursal",2);
+            bd.insert("Ubicaciones",null,registro);
+
+            //=================================================================
+            //==============UBICACIONES AGENCIA CADILLAC===========
+            //=================================================================
+            registro.put("Nombre_ubicacion","PUNTO EXHIB");
+            registro.put("Empresa",7);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","MOCHIS");
+            registro.put("Empresa",7);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","TRANSITO");
+            registro.put("Empresa",7);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","MATRIZ");
+            registro.put("Empresa",7);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
+            registro.put("Nombre_ubicacion","OTRO DISTRIBUIDOR");
+            registro.put("Empresa",7);
+            registro.put("Sucursal",1);
+            bd.insert("Ubicaciones",null,registro);
+
 
             bd.close();
 
