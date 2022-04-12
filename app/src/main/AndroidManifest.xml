@@ -7,6 +7,7 @@
 <!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>-->
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,6 +17,7 @@
         android:theme="@style/Theme.BDInventario"
         >
 
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
 <!--   this in the above tag application    android:usesCleartextTraffic="true"-->
 
         <activity

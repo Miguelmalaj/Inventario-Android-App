@@ -1,5 +1,7 @@
 package com.example.bd_inventario;
 
+import static java.security.AccessController.getContext;
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,10 +34,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private apiRest mAPIService;
+    private List<Usuarios> lista = new ArrayList<>();
 
     Button btnFecha;
     Button btnSalir;
@@ -80,20 +85,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(bundleUsuario != null){
             userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
-            /*Log.d("VALORES pasados a PANTALLA MAIN CON BUNDLE...:==","BUNDLE");
-            Log.d("Nombre_usuario:==",userLogged.getNombre().toString());
-            Log.d("Empresa:==",userLogged.getEmpresa().toString());
-            Log.d("Sucursal:==",userLogged.getSucursal().toString());*/
         }
 
+
+
         //objeto api rest
-        mAPIService = Utilidades.getAPIService();
+//        mAPIService = Utilidades.getAPIService();
+
+
+        /*RETROFIT FUNCIONANDO
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.10.10.52:3000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        apiRest apirest = retrofit.create(apiRest.class);
+
+        Call<List<Usuarios>> rest = apirest.leerTodo();
+
+        rest.enqueue(new Callback<List<Usuarios>>() {
+            @Override
+            public void onResponse(Call<List<Usuarios>> call, Response<List<Usuarios>> response) {
+                    lista.clear();
+                    lista.addAll(response.body());
+                    Log.d("data leida", "data leida");
+                    Log.d("data leida", response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<List<Usuarios>> call, Throwable t) {
+                Log.d("data no leida", "data no leida");
+                Log.d("data no leida 1", t.getMessage());
+                *//*Log.d("data no leida 2", t.getCause().toString());
+                Log.d("data no leida 3", t.getLocalizedMessage());*//*
+
+
+            }
+        });*/
+
+
 
         setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
 
         List<Ubicaciones> listaUbicacionesUsuario = llenarUbicaciones();
 
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, opciones);
         ArrayAdapter<Ubicaciones> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, listaUbicacionesUsuario);
 
         spubica.setAdapter(adapter);
@@ -104,12 +140,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 ubication_selected = adapterView.getSelectedItem().toString();
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -136,9 +170,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*Log.i("pruebaREST", "clic");
                 mAPIService.obtenerUsuarios().enqueue(new Callback<responseGetUsuarios>() {
                     @Override
                     public void onResponse(Call<responseGetUsuarios> call, Response<responseGetUsuarios> response) {
+                        Log.i("pruebaREST", "exito");
                         Gson objetoConsola = new Gson();
                         for (Usuarios objeto: response.body().getUsuarios()) {
                             Log.i("pruebaREST", objetoConsola.toJson(objeto));
@@ -150,12 +186,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onFailure(Call<responseGetUsuarios> call, Throwable t) {
                         Log.i("pruebaREST", "faallo");
                     }
+                });*/
+
+
+
+
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://10.10.10.52:3000/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                apiRest apirest = retrofit.create(apiRest.class);
+
+                Call<List<Usuarios>> rest = apirest.leerTodo();
+
+                rest.enqueue(new Callback<List<Usuarios>>() {
+                    @Override
+                    public void onResponse(Call<List<Usuarios>> call, Response<List<Usuarios>> response) {
+                        lista.clear();
+                        lista.addAll(response.body());
+                        Log.d("data leida", "data leida");
+                        Log.d("data leida", response.body().toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Usuarios>> call, Throwable t) {
+                        Log.d("data no leida", "data no leida");
+                        Log.d("data no leida 1", t.getMessage());
+
+                    }
                 });
-
-
 
             }
         });
+
+
     }
 
     public void cerrarSesion(){
