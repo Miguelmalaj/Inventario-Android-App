@@ -174,17 +174,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mAPIService.obtenerUsuarios().enqueue(new Callback<responseGetUsuarios>() {
                     @Override
                     public void onResponse(Call<responseGetUsuarios> call, Response<responseGetUsuarios> response) {
-                        Log.i("pruebaREST", "exito");
+
                         Gson objetoConsola = new Gson();
                         for (Usuarios objeto: response.body().getUsuarios()) {
-                            Log.i("pruebaREST", objetoConsola.toJson(objeto));
+                            Log.i("pruebaREST", objetoConsola.toJson(objeto.getId_usuario()));
+//                            Log.d("pruebaREST", objetoConsola.toJson(objeto));
 
                         }
                     }
 
                     @Override
                     public void onFailure(Call<responseGetUsuarios> call, Throwable t) {
-                        Log.i("pruebaREST", "faallo");
+                        Log.d("pruebaREST", "faallo");
                     }
                 });
 
