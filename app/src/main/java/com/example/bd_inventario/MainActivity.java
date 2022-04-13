@@ -23,7 +23,11 @@ import com.example.bd_inventario.Retrofit.Utilidades;
 import com.example.bd_inventario.Retrofit.apiRest;
 import com.example.bd_inventario.entidades.Usuarios;
 import com.example.bd_inventario.entidades.UsuariosEnviados;
+import com.example.bd_inventario.entidades.inventarioEnviado;
+import com.example.bd_inventario.entidades.listaInventario;
+import com.example.bd_inventario.response.responseGetInventario;
 import com.example.bd_inventario.response.responseGetUsuarios;
+import com.example.bd_inventario.response.responsePostInventario;
 import com.example.bd_inventario.response.responsePostUsuarios;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -89,43 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
         }
 
-
-
         //objeto api rest
         mAPIService = Utilidades.getAPIService();
-
-
-        /*RETROFIT FUNCIONANDO
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.10.10.52:3000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiRest apirest = retrofit.create(apiRest.class);
-
-        Call<List<Usuarios>> rest = apirest.leerTodo();
-
-        rest.enqueue(new Callback<List<Usuarios>>() {
-            @Override
-            public void onResponse(Call<List<Usuarios>> call, Response<List<Usuarios>> response) {
-                    lista.clear();
-                    lista.addAll(response.body());
-                    Log.d("data leida", "data leida");
-                    Log.d("data leida", response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<List<Usuarios>> call, Throwable t) {
-                Log.d("data no leida", "data no leida");
-                Log.d("data no leida 1", t.getMessage());
-                *//*Log.d("data no leida 2", t.getCause().toString());
-                Log.d("data no leida 3", t.getLocalizedMessage());*//*
-
-
-            }
-        });*/
-
 
 
         setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
@@ -173,6 +142,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
 
+                //metodo GET INVENTARIO
+                /*mAPIService.obtenerInventario().enqueue(new Callback<responseGetInventario>() {
+                    @Override
+                    public void onResponse(Call<responseGetInventario> call, Response<responseGetInventario> response) {
+                        Gson objetoConsola = new Gson();
+                        for (listaInventario objeto: response.body().getInventario()) {
+//                            Log.i("pruebaREST", objetoConsola.toJson(objeto));
+                            Log.d("pruebaREST", objetoConsola.toJson(objeto));
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<responseGetInventario> call, Throwable t) {
+                        Log.d("pruebaREST", "faallo");
+                    }
+                });*/
+
+
+                //METODO POST INVENTARIO
+                mAPIService.agregarInventario(new inventarioEnviado("QQASDFF","2022-09-12","PISO",2,2,2))
+                        .enqueue(new Callback<responsePostInventario>() {
+                            @Override
+                            public void onResponse(Call<responsePostInventario> call, Response<responsePostInventario> response) {
+                                Gson objetoConsola = new Gson();
+                                Log.i("POST=REST", objetoConsola.toJson(response.body()));
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<responsePostInventario> call, Throwable t) {
+                                Log.i("POST=REST", "there was an error");
+                            }
+                        });
+
+
+
+
                 /*
                 METODO GET USUARIOS========================================================
 
@@ -198,9 +207,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 */
 
                 //METODO POST USUARIOS
+                /*
                 mAPIService.agregarUsuarios(new UsuariosEnviados("androiduser","12345",1))
                         .enqueue(new Callback<responsePostUsuarios>() {
-                            @Override
+                            @Overridegit 
                             public void onResponse(Call<responsePostUsuarios> call, Response<responsePostUsuarios> response) {
                                 Gson objetoConsola = new Gson();
                                 Log.i("POST=REST", objetoConsola.toJson(response.body()));
@@ -212,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Log.i("POST=REST", "there was an error");
                             }
                         });
+                 */
 
 
 
