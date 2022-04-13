@@ -11,6 +11,10 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.bd_inventario.entidades.listaInventario;
+import com.example.bd_inventario.response.responseGetInventario;
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -931,6 +935,37 @@ public class consultas_db extends AdminSQLiteOpenHelper{
 
     }
 
+    public boolean registroRemotoALocal(responseGetInventario obj){
+        Gson objetoConsola = new Gson();
+        boolean registrados = false;
+
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            ContentValues registro = new ContentValues();
+            for (listaInventario objeto: obj.getInventario()) {
+
+                registro.put("VIN", objetoConsola.toJson(objeto.getVIN()));
+                registro.put("Id_fecha", objetoConsola.toJson(objeto.getId_fecha()));
+                registro.put("Nombre_ubicacion", objetoConsola.toJson(objeto.getNombre_ubicacion()));
+                registro.put("Empresa", objetoConsola.toJson(objeto.getEmpresa()));
+                registro.put("Sucursal", objetoConsola.toJson(objeto.getSucursal()));
+                registro.put("Id_usuario", objetoConsola.toJson(objeto.getId_usuario()));
+                bd.insert("Inventario", null, registro);
+
+            }
+            registrados = true;
+
+            bd.close();
+        }catch (SQLiteException e){
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return registrados;
+    }
+
     public boolean ExisteRegistrosEnTabla(){
         boolean existeregistro = false;
         try{
@@ -938,6 +973,24 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             Cursor cursor = bd.rawQuery("SELECT * FROM Usuarios", null);
 //            cursor.moveToFirst(); == se va al primer registro en caso de existencia
 //            if(cursor.getCount() == cuenta el total de registros obtenidos
+            if(cursor.moveToFirst()) existeregistro =true;
+            bd.close();
+
+        }catch(SQLiteException e){
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return existeregistro;
+    }
+
+    public boolean ExisteRegistrosEnTablaInventario(){
+        boolean existeregistro = false;
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            Cursor cursor = bd.rawQuery("SELECT * FROM Inventario", null);
             if(cursor.moveToFirst()) existeregistro =true;
             bd.close();
 

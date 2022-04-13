@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bd_inventario.Retrofit.Utilidades;
 import com.example.bd_inventario.Retrofit.apiRest;
+import com.example.bd_inventario.entidades.Objectparametros;
 import com.example.bd_inventario.entidades.Usuarios;
 import com.example.bd_inventario.entidades.UsuariosEnviados;
 import com.example.bd_inventario.entidades.inventarioEnviado;
@@ -88,13 +89,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSalir = findViewById(R.id.btnSalir);
         btnSync = findViewById(R.id.btnSync);
         bundleUsuario = getIntent().getExtras();
+        //objeto api rest
+        mAPIService = Utilidades.getAPIService();
 
         if(bundleUsuario != null){
             userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
+
+            //metodo para hacer la sincronización de bd local -remota.
+            //sincronizarEntornoBD();
         }
 
-        //objeto api rest
-        mAPIService = Utilidades.getAPIService();
 
 
         setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
@@ -273,6 +277,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    public void sincronizarEntornoBD(){
+        boolean registrosEnTablaInv = false;
+        consultas_db sync = new consultas_db(this, "Inventarios", null, 1);
+        registrosEnTablaInv = sync.ExisteRegistrosEnTablaInventario();
+
+        if(!registrosEnTablaInv){
+            Toast.makeText(this, "Debes sincronizar la BD.", Toast.LENGTH_LONG).show();
+            /*
+            * 0.- REVISAR SI HAY CONEXION A WIFI !!!!!!!!!!!!!!!!!!!!!
+            * 1.- REALIZAR PETICION GET PARA OBTENER REGISTROS DEL USUARIO()
+            * 2.- ACTUALIZAR BD LOCAL DE LOS DATOS DESCARGADOS DE LA BD REMOTA.
+            * 3.- (paso 2) INSERTAR LOS REGISTROS DESCARGADOS DESDE BD REMOTA, EN CASO DE OBTENER REGISTROS DE BD REMOTA
+            * */
+
+            mAPIService.getInventarioAgencia(new Objectparametros(
+                    Integer.parseInt(userLogged.getEmpresa()), //Empresa
+                    Integer.parseInt(userLogged.getSucursal()), //Sucursal
+                    Integer.parseInt(userLogged.getId_usuario()) //Id usuario
+            )).enqueue(new Callback<responseGetInventario>() {
+                @Override
+                public void onResponse(Call<responseGetInventario> call, Response<responseGetInventario> response) {
+                    /*
+                    * 1.CREAR UN METODO EN CONSULTAS_DB PARA REGISTRAR LOS ROWS OBTENIDOS DE BD REMOTO
+                    *   1.1- ENVIAR EL OBJETO RESPONSE.BODY() - COMO PARAMETRO
+                    *   1.2- DENTRO DE LA CONSULTA REALIZAR EL FOR EACH Y AGREGAR TODOS LOS REGISTROS
+                    * */
+
+
+                    /*Gson objetoConsola = new Gson();
+                    for (listaInventario objeto: response.body().getInventario()) {
+//                            Log.i("pruebaREST", objetoConsola.toJson(objeto));
+                        Log.d("pruebaREST", objetoConsola.toJson(objeto.getVIN()));
+
+                    }*/
+
+                    //VALIDAR SI DATA ES NULL
+                    //REGISTRAR DATA REMOTO
+                    boolean registrados = sync.registroRemotoALocal(response.body());
+                    if(registrados) Log.d("LOG:==","Se han registrados rows remoto-local");
+//                    imprimirPrueba(response.body());
+
+                }
+
+                @Override
+                public void onFailure(Call<responseGetInventario> call, Throwable t) {
+                    Log.d("pruebaREST", "faallo");
+                }
+            });
+
+
+        }else{
+            Toast.makeText(this, "La BD ya se encuentra actualizada.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void cerrarSesion(){
         Intent log_out = new Intent(this,LoginActivity.class);
         startActivity(log_out);
@@ -397,6 +456,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String nomAgencia = bdagencia.getNombreAgencia(Empresa, Sucursal);
         nombreAgencia.setText(nomAgencia);
+    }
+
+    public void imprimirPrueba(responseGetInventario objecto){
+        Toast.makeText(this, objecto.toString(), Toast.LENGTH_LONG).show();
+            return;
     }
 
 }

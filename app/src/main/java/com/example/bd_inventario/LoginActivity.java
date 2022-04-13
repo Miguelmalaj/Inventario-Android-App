@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity{
         edtxtNombre = findViewById(R.id.edtxtNombre);
         edtxtClave = findViewById(R.id.edtxtClave);
 
-        //validar si existe la Bd
+        //validar si existe la Bd == COMPROBAMOS SI EL LA PRIMERA VEZ QUE SE INICIA LA APP
         dbstart = new consultas_db(this, "Inventarios", null, 1);
         registrosEntabla = dbstart.ExisteRegistrosEnTabla();
 
@@ -37,7 +37,8 @@ public class LoginActivity extends AppCompatActivity{
             dbstart.RegistrarUsuarios();
             dbstart.RegistrarEmpresas();
             dbstart.RegistrarUbicaciones();
-            Toast.makeText(this, "BD ha sido creada correctamente.", Toast.LENGTH_LONG).show();
+
+            Toast.makeText(this, "BD local ha sido creada correctamente.", Toast.LENGTH_LONG).show();
         }
 
         btnIniciar.setOnClickListener(new View.OnClickListener() {

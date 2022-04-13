@@ -1,5 +1,6 @@
 package com.example.bd_inventario.Retrofit;
 
+import com.example.bd_inventario.entidades.Objectparametros;
 import com.example.bd_inventario.entidades.Usuarios;
 import com.example.bd_inventario.entidades.UsuariosEnviados;
 import com.example.bd_inventario.entidades.inventarioEnviado;
@@ -30,5 +31,11 @@ public interface apiRest {
 
    @POST("api/inventario/")
    Call<responsePostInventario> agregarInventario(@Body inventarioEnviado inventario);
+
+   //NUEVOS ENDPOINTS ==================================================
+   //==================================================================
+   //GET como POST INVENTARIO POR AGENCIA - USUARIO
+   @POST("api/inventarioagencia")
+   Call<responseGetInventario> getInventarioAgencia(@Body Objectparametros parBody);
 
 }
