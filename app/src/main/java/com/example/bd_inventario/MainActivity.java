@@ -3,8 +3,11 @@ package com.example.bd_inventario;
 import static java.security.AccessController.getContext;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnFecha;
     Button btnSalir;
     EditText txtFecha;
+    TextView txtDate;
 //    Spinner spubicacion;
     Button btnguardar;
     Button btnscan;
@@ -77,9 +81,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnFecha = findViewById(R.id.btnFecha);
-        txtFecha = findViewById(R.id.txtFecha);
-        btnFecha.setOnClickListener(this);
+//        btnFecha = findViewById(R.id.btnFecha);
+//        txtFecha = findViewById(R.id.txtFecha);
+//        btnFecha.setOnClickListener(this);
+        txtDate = findViewById(R.id.txtDate);
         spubica = findViewById(R.id.spubicacion);
         btnguardar = findViewById(R.id.btnguardar);
         btnscan = findViewById(R.id.btnScaner);
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSalir = findViewById(R.id.btnSalir);
         btnSync = findViewById(R.id.btnSync);
         bundleUsuario = getIntent().getExtras();
+        setFecha();
         //objeto api rest
         mAPIService = Utilidades.getAPIService();
 
@@ -167,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });*/
 
 
-                //METODO POST INVENTARIO
-                mAPIService.agregarInventario(new inventarioEnviado("QQASDFF","2022-09-12","PISO",2,2,2))
+                //METODO POST INVENTARIO =====ULTIMO FUNCIONAL !!!!
+                /*mAPIService.agregarInventario(new inventarioEnviado("QQASDFF","2022-09-12","PISO",2,2,2))
                         .enqueue(new Callback<responsePostInventario>() {
                             @Override
                             public void onResponse(Call<responsePostInventario> call, Response<responsePostInventario> response) {
@@ -181,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onFailure(Call<responsePostInventario> call, Throwable t) {
                                 Log.i("POST=REST", "there was an error");
                             }
-                        });
+                        });*/
 
 
 
@@ -271,10 +277,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });*/
 
+                //revisar conexion wifi
+                if(!revisarConexion()){
+                    Toast.makeText(MainActivity.this, "Favor de conectarse a la red antes de realizar la sincronización.", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
 
             }
         });
+    }
+
+    private void setFecha() {
+        Calendar cal = Calendar.getInstance();
+        String dia = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+        String mes = String.valueOf(cal.get(Calendar.MONTH) + 1);
+        String anio = String.valueOf(cal.get(Calendar.YEAR));
+
+        if(dia.length() == 1) dia = "0" + dia;
+        if(mes.length() == 1) mes = "0" + mes;
+
+        String fechaHoy = ("FECHA: "+dia + "-" + mes + "-" +anio);
+        txtDate.setText(fechaHoy);
+
     }
 
     public void sincronizarEntornoBD(){
@@ -461,6 +486,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void imprimirPrueba(responseGetInventario objecto){
         Toast.makeText(this, objecto.toString(), Toast.LENGTH_LONG).show();
             return;
+    }
+
+    //método para verificar la conexión phone | wifi
+    public static boolean checkNetworkConnection(Context context){
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    public boolean revisarConexion(){
+        if(checkNetworkConnection(this)) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
