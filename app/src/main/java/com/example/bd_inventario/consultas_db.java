@@ -156,8 +156,6 @@ public class consultas_db extends AdminSQLiteOpenHelper{
                 e1.printStackTrace();
             }
         }
-
-
     }
 
     public void RegistrarUbicaciones(){
