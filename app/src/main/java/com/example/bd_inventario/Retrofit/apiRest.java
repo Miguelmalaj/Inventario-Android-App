@@ -4,6 +4,8 @@ import com.example.bd_inventario.entidades.Objectparametros;
 import com.example.bd_inventario.entidades.Usuarios;
 import com.example.bd_inventario.entidades.UsuariosEnviados;
 import com.example.bd_inventario.entidades.inventarioEnviado;
+import com.example.bd_inventario.entidades.listaInventario;
+import com.example.bd_inventario.entidades.responseRegistrosInventario;
 import com.example.bd_inventario.response.responseGetInventario;
 import com.example.bd_inventario.response.responseGetUsuarios;
 import com.example.bd_inventario.response.responsePostInventario;
@@ -35,7 +37,13 @@ public interface apiRest {
    //NUEVOS ENDPOINTS ==================================================
    //==================================================================
    //GET como POST INVENTARIO POR AGENCIA - USUARIO
-   @POST("api/inventarioagencia")
+   @POST("api/inventarioagenciaModificado")
    Call<responseGetInventario> getInventarioAgencia(@Body Objectparametros parBody);
+
+   //prueba final
+   @POST("api/inventarioagencia")
+   Call<responseRegistrosInventario> sincronizaInventario(@Body List<listaInventario> body);
+//   Call<responseRegistrosInventario> sincronizaInventario(@Body listaInventario body);
+//   Call<responseRegistrosInventario> sincronizaInventario(@Body responseGetInventario body);
 
 }

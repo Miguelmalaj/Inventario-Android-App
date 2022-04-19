@@ -3,6 +3,7 @@ package com.example.bd_inventario;
 import static java.security.AccessController.getContext;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,6 +30,7 @@ import com.example.bd_inventario.entidades.Usuarios;
 import com.example.bd_inventario.entidades.UsuariosEnviados;
 import com.example.bd_inventario.entidades.inventarioEnviado;
 import com.example.bd_inventario.entidades.listaInventario;
+import com.example.bd_inventario.entidades.responseRegistrosInventario;
 import com.example.bd_inventario.response.responseGetInventario;
 import com.example.bd_inventario.response.responseGetUsuarios;
 import com.example.bd_inventario.response.responsePostInventario;
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Bundle bundleUsuario;
     Usuario userLogged;
     TextView nombreAgencia;
-
+    ProgressDialog proceso;
 
 
 //    consultas_db dbstart;
@@ -149,8 +151,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         btnSync.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View view) {
+                btnSalir.setEnabled(false);
+                btnSync.setEnabled(false);
+                btnguardar.setEnabled(false);
+
+
+
+
+                /*try {
+                    proceso = new ProgressDialog(MainActivity.this);
+                    proceso.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//                proceso.setMessage("Sincronizando inventarios...");
+                    proceso.show(MainActivity.this, "dialog title",
+                            "dialog message", true);
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+
 
                 //metodo GET INVENTARIO
                 /*mAPIService.obtenerInventario().enqueue(new Callback<responseGetInventario>() {
@@ -235,56 +257,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  */
 
 
+                //1.- Revisar conexion wifi
+                //2.- Crear funcion para obtener todos los registros de inventarios de HOY.
+                //3.- Obtener los registros (validar si es null)
+                //4.- Crear modelo donde serán guardados todos los registros.
+                //5.-
 
-
-
-                /*  ULTIMA PRUEBA FUNCIONAL de otro tuto
-
-
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://10.10.10.52:3000/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                apiRest apirest = retrofit.create(apiRest.class);
-
-                Call<List<Usuarios>> rest = apirest.leerTodo();
-
-                rest.enqueue(new Callback<List<Usuarios>>() {
-                    @Override
-                    public void onResponse(Call<List<Usuarios>> call, Response<List<Usuarios>> response) {
-                        lista.clear();
-                        lista.addAll(response.body());
-
-                        //PRUEBAS
-                        Gson objetoConsola = new Gson();
-                        for (Usuarios objeto: response.body()) {
-                            Log.i("pruebaREST", objetoConsola.toJson(objeto.getClave() + objeto.getNombre_usuario()));
-
-                        }
-                        //PRUEBAS
-
-
-                        Log.d("data leida", "data leida");
-                        Log.d("data leida", response.body().toString());
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Usuarios>> call, Throwable t) {
-                        Log.d("data no leida", "data no leida");
-                        Log.d("data no leida 1", t.getMessage());
-
-                    }
-                });*/
-
-                //revisar conexion wifi
                 if(!revisarConexion()){
+                    btnguardar.setEnabled(true);
+                    btnSalir.setEnabled(true);
+                    btnSync.setEnabled(true);
                     Toast.makeText(MainActivity.this, "Favor de conectarse a la red antes de realizar la sincronización.", Toast.LENGTH_LONG).show();
                     return;
+
                 }
 
+                consultas_db queryLocal = new consultas_db(MainActivity.this, "Inventarios", null, 1);
+                List<listaInventario> registrosInventarioHoy = queryLocal.getInventarioDeHoy(
+                        Integer.parseInt(userLogged.getEmpresa()),
+                        Integer.parseInt(userLogged.getSucursal()),
+                        Integer.parseInt(userLogged.getId_usuario()),
+                        getFecha().trim()
+                );
+                queryLocal.close();
+
+                /*if(!registrosInventarioHoy.isEmpty()){
+
+                }*/
+                mAPIService
+//                        .sincronizaInventario(new listaInventario(1,"vin","fecha","ubcacion",1,1,2))
+                        .sincronizaInventario(registrosInventarioHoy)
+                        .enqueue(new Callback<responseRegistrosInventario>() {
+
+                            @Override
+                            public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
+                                Log.i("RESPUESTA=","200");
+                                Log.i("RESPUESTA=",response.body().getMensaje());
+//                                response.body().getMensaje();
+//                                proceso.dismiss();
+                                if(response.body().getEstado() == 2){ //server response 2 si no hay registros
+                                    btnguardar.setEnabled(true);
+                                    btnSync.setEnabled(true);
+                                }
+                                Toast.makeText(MainActivity.this, response.body().getMensaje() , Toast.LENGTH_LONG).show();
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
+                                Log.i("RESPUESTA=","500");
+                                Log.i("RESPUESTA=",t.getMessage());
+                                Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
+//                                proceso.dismiss();
+                            }
+                        });
+
+                btnSalir.setEnabled(true);
 
             }
+
         });
     }
 
@@ -300,6 +331,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String fechaHoy = ("FECHA: "+dia + "-" + mes + "-" +anio);
         txtDate.setText(fechaHoy);
 
+    }
+
+    public String getFecha(){
+        String fechaHoy = "";
+        Calendar cal = Calendar.getInstance();
+        String dia = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+        String mes = String.valueOf(cal.get(Calendar.MONTH) + 1);
+        String anio = String.valueOf(cal.get(Calendar.YEAR));
+
+        if(dia.length() == 1) dia = "0" + dia;
+        if(mes.length() == 1) mes = "0" + mes;
+
+        fechaHoy = (anio+ "-"+mes+"-"+dia);
+
+        return fechaHoy;
     }
 
     public void sincronizarEntornoBD(){
@@ -365,12 +411,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
 
-        Calendar cal = Calendar.getInstance();
+       /* Calendar cal = Calendar.getInstance();
         dia = cal.get(Calendar.DAY_OF_MONTH);
         mes = cal.get(Calendar.MONTH);
         anio = cal.get(Calendar.YEAR);
         //agregar cero a los días antes del 10 y a los meses antes del 10
-        /*Log.d("DIA:==",String.valueOf(dia));*/
+        Log.d("DIA:==",String.valueOf(dia));
 
         DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -390,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         }, anio, mes, dia);
-        dpd.show();
+        dpd.show();*/
 
     }
 
@@ -405,7 +451,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int Sucursal = Integer.parseInt(userLogged.getSucursal().toString());
 
         // Alta de variables para guardar en la base de datos
-        String fecha_db = txtFecha.getText().toString();
+//        String fecha_db = txtDate.getText().toString();
+        String fecha_db = getFecha();
         String ubicacion_db = ubication_selected;
         String Vin_db = txtVin.getText().toString();
 
@@ -435,7 +482,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //limpiar campos
-        txtFecha.setText("");
+//        txtFecha.setText("");
+        admin.close();
         txtVin.setText("");
     }
 

@@ -16,7 +16,9 @@ import com.example.bd_inventario.response.responseGetInventario;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class consultas_db extends AdminSQLiteOpenHelper{
@@ -66,35 +68,35 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             ContentValues registro = new ContentValues();
 
             //primer usuario mochis
-            registro.put("Nombre_usuario", "inventariomochis");
+            registro.put("Nombre_usuario", "invmochis");
             registro.put("Empresa", 1);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invmochis1");
             bd.insert("Usuarios",null,registro);
 
             //segundo usuario guasave
-            registro.put("Nombre_usuario", "inventarioguasave");
+            registro.put("Nombre_usuario", "invgve");
             registro.put("Empresa", 3);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invguasave2");
             bd.insert("Usuarios",null,registro);//segundo usuario guasave
 
             //tercer usuario zapata
-            registro.put("Nombre_usuario", "inventariozap");
+            registro.put("Nombre_usuario", "invzap");
             registro.put("Empresa", 5);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invzapata3");
             bd.insert("Usuarios",null,registro);//segundo usuario guasave
 
             //cuarto usuario aeropuerto
-            registro.put("Nombre_usuario", "inventarioaero");
+            registro.put("Nombre_usuario", "invaero");
             registro.put("Empresa", 5);
             registro.put("Sucursal", 2);
             registro.put("Clave", "invaero4");
             bd.insert("Usuarios",null,registro);//segundo usuario guasave
 
             //quinto usuario cadillac
-            registro.put("Nombre_usuario", "inventariocad");
+            registro.put("Nombre_usuario", "invcad");
             registro.put("Empresa", 7);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invcad5");
@@ -1089,6 +1091,53 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             return null;
         }
 
+    }
+
+    public List<listaInventario> getInventarioDeHoy(int Empresa, int Sucursal, int Id_usuario, String Id_fecha){
+        List<listaInventario> registrosInventario = new ArrayList<>();
+
+        Log.i("DATO","Entramos ala funcion");
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+
+            //importante = OBTENER REGISTROS SOLO DE HOY
+            Cursor filas = bd.rawQuery("SELECT * FROM Inventario WHERE Empresa="+Empresa+" AND Sucursal="+Sucursal+" AND Id_fecha='"+Id_fecha+"'",null);
+
+            if(filas != null){
+             if(filas.moveToFirst()){
+
+                 do {
+//                     Log.d("DATO=",String.valueOf( filas.getString(0) ));
+                     registrosInventario.add(new listaInventario(
+                             Integer.parseInt( filas.getString(0) ),//id_invent
+                             filas.getString(1),//VIN
+                             filas.getString(2),//Id_fecha
+                             filas.getString(3),//Nombre_ubicacion
+                             Integer.parseInt(filas.getString(4)),//Empresa
+                             Integer.parseInt(filas.getString(5)),//Sucursal
+                             Integer.parseInt(filas.getString(6))//Id_usuario
+                     ));
+
+                 }while(filas.moveToNext());
+
+            }
+
+             //imprimir registros con for each
+                /*for (listaInventario objeto: registrosInventario) {
+                    Log.i("OBJETO DATO", objeto.getNombre_ubicacion());
+                }*/
+            bd.close();
+
+        }
+        }catch(SQLiteException e){
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        return registrosInventario;
     }
 
     public String getNombreAgencia(int Empresa, int Sucursal){
