@@ -61,6 +61,42 @@ public class consultas_db extends AdminSQLiteOpenHelper{
         return resultBd;
     }
 
+    public int ActualizarInventario(
+            String fecha_db,
+            String ubicacion_db,
+            String Vin_db,
+            int Id_usuario,
+            int Empresa,
+            int Sucursal
+    ){
+        int resultBd=-1;
+        try{
+            SQLiteDatabase bd = this.getWritableDatabase();
+            ContentValues registro = new ContentValues();
+
+//            registro.put("VIN", Vin_db);
+            registro.put("Id_fecha", fecha_db);
+            registro.put("Nombre_ubicacion", ubicacion_db);
+            registro.put("Empresa", Empresa);
+            registro.put("Sucursal", Sucursal);
+            registro.put("Id_usuario", Id_usuario);
+
+            resultBd = bd.update("Inventario",registro,"VIN='"+Vin_db+"'",null);
+//            resultBd = bd.insert("Inventario", null, registro);
+            Log.d("actualizar registro:==== ",String.valueOf(resultBd));
+//            Log.d("RESULTADO REGISTRO: ",resultBd.toString());
+            bd.close();
+
+        }catch(SQLiteException e){
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return resultBd;
+    }
+
     public void RegistrarUsuarios(){
 //        Log.d("Registrar usuarios:==", "tabla usuarios creada.");
         try{
@@ -713,12 +749,12 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             //=================================================================
             //==============UBICACIONES AGENCIA ZAPATA========================
             //=================================================================
-            registro.put("Nombre_ubicacion","ZAPATA EST SUPERIOR");
+            registro.put("Nombre_ubicacion","ZAP EST SUPERIOR");
             registro.put("Empresa",5);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","TRANSITO AEROPUERTO");
+            registro.put("Nombre_ubicacion","TRANSITO AERO");
             registro.put("Empresa",5);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
@@ -728,7 +764,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","ZAPATA PISO DE EXH");
+            registro.put("Nombre_ubicacion","ZAP PISO DE EXH");
             registro.put("Empresa",5);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
@@ -763,12 +799,12 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","EN SEMINUEVOS ZAPATA");
+            registro.put("Nombre_ubicacion","EN SEMINVS ZAPATA");
             registro.put("Empresa",5);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","EN SEMINUEVOS AEROPUERTO");
+            registro.put("Nombre_ubicacion","EN SEMINVS AERO");
             registro.put("Empresa",5);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
@@ -776,17 +812,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             //=================================================================
             //==============UBICACIONES AGENCIA GUASAVE========================
             //=================================================================
-            registro.put("Nombre_ubicacion","PREVIAS");
-            registro.put("Empresa",3);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
-            registro.put("Nombre_ubicacion","BODEGA");
-            registro.put("Empresa",3);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
-            registro.put("Nombre_ubicacion","CARROCERIA");
+            registro.put("Nombre_ubicacion","SEMINUEVOS");
             registro.put("Empresa",3);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
@@ -796,32 +822,12 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","PATIO");
-            registro.put("Empresa",3);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
-            registro.put("Nombre_ubicacion","SALA EXHIBICION");
-            registro.put("Empresa",3);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
             registro.put("Nombre_ubicacion","TRANSITO");
             registro.put("Empresa",3);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","E1");
-            registro.put("Empresa",3);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
-            registro.put("Nombre_ubicacion","E2");
-            registro.put("Empresa",3);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
-            registro.put("Nombre_ubicacion","E3");
+            registro.put("Nombre_ubicacion","CARROCERIA");
             registro.put("Empresa",3);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
@@ -831,20 +837,22 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","HYP");
+            registro.put("Nombre_ubicacion","PATIO");
             registro.put("Empresa",3);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","SEMINUEVOS");
+            registro.put("Nombre_ubicacion","BODEGA");
             registro.put("Empresa",3);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
+
+
 
             //=================================================================
             //==============UBICACIONES AGENCIA AEROPUERTO - CULICAN===========
             //=================================================================
-            registro.put("Nombre_ubicacion","ZAPATA PISO DE EXH");
+            registro.put("Nombre_ubicacion","ZAP PISO DE EXH");
             registro.put("Empresa",5);
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
@@ -854,12 +862,12 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","TRANSITO AEROPUERTO");
+            registro.put("Nombre_ubicacion","TRANSITO AERO");
             registro.put("Empresa",5);
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","EN SEMINUEVOS AEROPUERTO");
+            registro.put("Nombre_ubicacion","EN SEMINVS AERO");
             registro.put("Empresa",5);
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
@@ -879,7 +887,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","EN SEMINUEVOS ZAPATA");
+            registro.put("Nombre_ubicacion","EN SEMINVS ZAPATA");
             registro.put("Empresa",5);
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
@@ -889,7 +897,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","ZAPATA EST SUPERIOR");
+            registro.put("Nombre_ubicacion","ZAPATA EST SUP");
             registro.put("Empresa",5);
             registro.put("Sucursal",2);
             bd.insert("Ubicaciones",null,registro);
@@ -1101,7 +1109,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             SQLiteDatabase bd = this.getWritableDatabase();
 
             //importante = OBTENER REGISTROS SOLO DE HOY
-            Cursor filas = bd.rawQuery("SELECT * FROM Inventario WHERE Empresa="+Empresa+" AND Sucursal="+Sucursal+" AND Id_fecha='"+Id_fecha+"'",null);
+            Cursor filas = bd.rawQuery("SELECT * FROM Inventario WHERE Empresa="+Empresa+" AND Sucursal="+Sucursal+" AND Id_fecha='"+Id_fecha+"' AND Id_usuario="+Id_usuario,null);
 
             if(filas != null){
              if(filas.moveToFirst()){

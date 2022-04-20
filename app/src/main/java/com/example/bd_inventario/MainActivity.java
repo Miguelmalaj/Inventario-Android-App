@@ -160,103 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btnguardar.setEnabled(false);
 
 
-
-
-                /*try {
-                    proceso = new ProgressDialog(MainActivity.this);
-                    proceso.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//                proceso.setMessage("Sincronizando inventarios...");
-                    proceso.show(MainActivity.this, "dialog title",
-                            "dialog message", true);
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
-
-
-                //metodo GET INVENTARIO
-                /*mAPIService.obtenerInventario().enqueue(new Callback<responseGetInventario>() {
-                    @Override
-                    public void onResponse(Call<responseGetInventario> call, Response<responseGetInventario> response) {
-                        Gson objetoConsola = new Gson();
-                        for (listaInventario objeto: response.body().getInventario()) {
-//                            Log.i("pruebaREST", objetoConsola.toJson(objeto));
-                            Log.d("pruebaREST", objetoConsola.toJson(objeto));
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<responseGetInventario> call, Throwable t) {
-                        Log.d("pruebaREST", "faallo");
-                    }
-                });*/
-
-
-                //METODO POST INVENTARIO =====ULTIMO FUNCIONAL !!!!
-                /*mAPIService.agregarInventario(new inventarioEnviado("QQASDFF","2022-09-12","PISO",2,2,2))
-                        .enqueue(new Callback<responsePostInventario>() {
-                            @Override
-                            public void onResponse(Call<responsePostInventario> call, Response<responsePostInventario> response) {
-                                Gson objetoConsola = new Gson();
-                                Log.i("POST=REST", objetoConsola.toJson(response.body()));
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<responsePostInventario> call, Throwable t) {
-                                Log.i("POST=REST", "there was an error");
-                            }
-                        });*/
-
-
-
-
-                /*
-                METODO GET USUARIOS========================================================
-
-                mAPIService.obtenerUsuarios().enqueue(new Callback<responseGetUsuarios>() {
-                    @Override
-                    public void onResponse(Call<responseGetUsuarios> call, Response<responseGetUsuarios> response) {
-
-                        Gson objetoConsola = new Gson();
-                        for (Usuarios objeto: response.body().getUsuarios()) {
-                            Log.i("pruebaREST", objetoConsola.toJson(objeto.getId_usuario()));
-//                            Log.d("pruebaREST", objetoConsola.toJson(objeto));
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<responseGetUsuarios> call, Throwable t) {
-                        Log.d("pruebaREST", "faallo");
-                    }
-                });
-                METODO GET USUARIOS========================================================
-
-                */
-
-                //METODO POST USUARIOS
-                /*
-                mAPIService.agregarUsuarios(new UsuariosEnviados("androiduser","12345",1))
-                        .enqueue(new Callback<responsePostUsuarios>() {
-                            @Overridegit 
-                            public void onResponse(Call<responsePostUsuarios> call, Response<responsePostUsuarios> response) {
-                                Gson objetoConsola = new Gson();
-                                Log.i("POST=REST", objetoConsola.toJson(response.body()));
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<responsePostUsuarios> call, Throwable t) {
-                                Log.i("POST=REST", "there was an error");
-                            }
-                        });
-                 */
-
-
                 //1.- Revisar conexion wifi
                 //2.- Crear funcion para obtener todos los registros de inventarios de HOY.
                 //3.- Obtener los registros (validar si es null)
@@ -272,20 +175,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
 
-                consultas_db queryLocal = new consultas_db(MainActivity.this, "Inventarios", null, 1);
+                /*consultas_db queryLocal = new consultas_db(MainActivity.this, "Inventarios", null, 1);
                 List<listaInventario> registrosInventarioHoy = queryLocal.getInventarioDeHoy(
                         Integer.parseInt(userLogged.getEmpresa()),
                         Integer.parseInt(userLogged.getSucursal()),
                         Integer.parseInt(userLogged.getId_usuario()),
                         getFecha().trim()
                 );
-                queryLocal.close();
+                queryLocal.close();*/
 
-                /*if(!registrosInventarioHoy.isEmpty()){
+                mAPIService.existeRegistrosDeHoy(new Objectparametros(Integer.parseInt(userLogged.getEmpresa()),Integer.parseInt(userLogged.getSucursal()),getFecha()))
+                        .enqueue(new Callback<responseRegistrosInventario>() {
+                            @Override
+                            public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
+                                Log.i("RESPUESTA=","200");
 
-                }*/
+                                if(response.body().getEstado() == 2){ //server response 2 si no hay registros
+                                    Log.i("RESPUESTA=",response.body().getMensaje());
+                                    sincronizarPrimeraVez();
+                                }
+
+                                if(response.body().getEstado() == 1){ //server response 1 si hay registros
+                                    Log.i("RESPUESTA=",response.body().getMensaje());
+                                    EliminarRegistrosRemotos();
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
+                                Log.i("RESPUESTA=","500");
+                                Toast.makeText(MainActivity.this, "Error al conectar con servidor, verificar conexión VPN" , Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+
+                /*
                 mAPIService
-//                        .sincronizaInventario(new listaInventario(1,"vin","fecha","ubcacion",1,1,2))
                         .sincronizaInventario(registrosInventarioHoy)
                         .enqueue(new Callback<responseRegistrosInventario>() {
 
@@ -293,8 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
                                 Log.i("RESPUESTA=","200");
                                 Log.i("RESPUESTA=",response.body().getMensaje());
-//                                response.body().getMensaje();
-//                                proceso.dismiss();
+
                                 if(response.body().getEstado() == 2){ //server response 2 si no hay registros
                                     btnguardar.setEnabled(true);
                                     btnSync.setEnabled(true);
@@ -308,15 +233,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Log.i("RESPUESTA=","500");
                                 Log.i("RESPUESTA=",t.getMessage());
                                 Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
-//                                proceso.dismiss();
+
                             }
                         });
+                */
 
                 btnSalir.setEnabled(true);
 
             }
 
         });
+    }
+
+    private void EliminarRegistrosRemotos() {
+        Log.i("RESPUESTA=","accedimos a metodo sincrnoizarActualizar");
+        String cadena = userLogged.getEmpresa() + "-" +userLogged.getSucursal() + "-"+getFecha();
+
+        mAPIService.eliminarRegistrosDeHoy(cadena)
+                .enqueue(new Callback<responseRegistrosInventario>() {
+                    @Override
+                    public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
+                        Toast.makeText(MainActivity.this, response.body().getMensaje() , Toast.LENGTH_LONG).show();
+                        sincronizarPrimeraVez();
+                    }
+
+                    @Override
+                    public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
+
+    private void sincronizarPrimeraVez() {
+        Log.i("RESPUESTA=", "accedimos a metodo sincrnoizarPrimeraVez");
+        consultas_db queryLocal = new consultas_db(MainActivity.this, "Inventarios", null, 1);
+        List<listaInventario> registrosInventarioHoy = queryLocal.getInventarioDeHoy(
+                Integer.parseInt(userLogged.getEmpresa()),
+                Integer.parseInt(userLogged.getSucursal()),
+                Integer.parseInt(userLogged.getId_usuario()),
+                getFecha().trim()
+        );
+        queryLocal.close();
+
+        mAPIService
+                .sincronizaInventario(registrosInventarioHoy)
+                .enqueue(new Callback<responseRegistrosInventario>() {
+
+                    @Override
+                    public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
+                        Log.i("RESPUESTA=","200");
+                        Log.i("RESPUESTA=",response.body().getMensaje());
+
+                        if(response.body().getEstado() == 2){ //server response 2 si no hay registros
+                            btnguardar.setEnabled(true);
+                            btnSync.setEnabled(true);
+                        }
+                        Toast.makeText(MainActivity.this, response.body().getMensaje() , Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
+                        Log.i("RESPUESTA=","500");
+                        Log.i("RESPUESTA=",t.getMessage());
+                        Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
+
+                    }
+                });
     }
 
     private void setFecha() {
@@ -365,7 +349,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mAPIService.getInventarioAgencia(new Objectparametros(
                     Integer.parseInt(userLogged.getEmpresa()), //Empresa
                     Integer.parseInt(userLogged.getSucursal()), //Sucursal
-                    Integer.parseInt(userLogged.getId_usuario()) //Id usuario
+                    getFecha()
+//                    Integer.parseInt(userLogged.getId_usuario()) //Id usuario
             )).enqueue(new Callback<responseGetInventario>() {
                 @Override
                 public void onResponse(Call<responseGetInventario> call, Response<responseGetInventario> response) {
@@ -411,32 +396,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
 
-       /* Calendar cal = Calendar.getInstance();
-        dia = cal.get(Calendar.DAY_OF_MONTH);
-        mes = cal.get(Calendar.MONTH);
-        anio = cal.get(Calendar.YEAR);
-        //agregar cero a los días antes del 10 y a los meses antes del 10
-        Log.d("DIA:==",String.valueOf(dia));
-
-        DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                //agregar cero a los días antes del 10 y mes
-                month++;
-                String convertday = String.valueOf(day);
-                String convertmonth = String.valueOf(month);
-                //String convertyear = String.valueOf(year);
-
-                if(convertday.length() == 1) convertday = "0" + convertday;
-                if(convertmonth.length() == 1) convertmonth = "0" + convertmonth;
-
-                String fecha = (year + "-" + (convertmonth) + "-" + convertday);
-
-                txtFecha.setText(fecha);
-
-            }
-        }, anio, mes, dia);
-        dpd.show();*/
 
     }
 
@@ -458,7 +417,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if ((!fecha_db.isEmpty()) && (!ubicacion_db.isEmpty()) && (!Vin_db.isEmpty())) {
-                //validar si el registro se realiza correctamente
+            //1.- Validar si el VIN YA existe
+            //1.1.- Si ya existe lo actualizamos
+            //1.2.- Si no existe solo registramos
+            //2.- Validar si el registro se realiza correctamente
+
                 Long resultado_registro = admin.RegistrarInventario(
                         fecha_db,
                         ubicacion_db,
@@ -472,7 +435,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Registro Exitoso", Toast.LENGTH_LONG).show();
 
                }else{
-                Toast.makeText(this, "El registro ya existe en la BD", Toast.LENGTH_LONG).show();
+                int resultado_actualizar = admin.ActualizarInventario(
+                        fecha_db,
+                        ubicacion_db,
+                        Vin_db,
+                        Id_usuario,
+                        Empresa,
+                        Sucursal
+                );
+
+                if(resultado_actualizar != 1){
+                    Toast.makeText(this, "No se logró actualizar el registro", Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(this, "El registro se actualizó en la BD", Toast.LENGTH_LONG).show();
 
                }
 

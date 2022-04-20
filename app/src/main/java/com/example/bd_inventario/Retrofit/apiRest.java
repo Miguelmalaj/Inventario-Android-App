@@ -15,8 +15,11 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface apiRest {
 
@@ -41,9 +44,19 @@ public interface apiRest {
    Call<responseGetInventario> getInventarioAgencia(@Body Objectparametros parBody);
 
    //prueba final
-   @POST("api/inventarioagencia")
+   @POST("api/invagencia")
    Call<responseRegistrosInventario> sincronizaInventario(@Body List<listaInventario> body);
 //   Call<responseRegistrosInventario> sincronizaInventario(@Body listaInventario body);
 //   Call<responseRegistrosInventario> sincronizaInventario(@Body responseGetInventario body);
+
+   /*@PATCH("api/invagenciaupd")
+   Call<responseRegistrosInventario> sincronizaActualizaInventario(@Body List<listaInventario> body);*/
+
+   @DELETE("api/inveliminar/{id}")
+   Call<responseRegistrosInventario> eliminarRegistrosDeHoy(@Path("id") String id);
+
+   //valida si hay registros en la bd - hoy
+   @POST("api/invexiste")
+   Call<responseRegistrosInventario> existeRegistrosDeHoy(@Body Objectparametros body);
 
 }

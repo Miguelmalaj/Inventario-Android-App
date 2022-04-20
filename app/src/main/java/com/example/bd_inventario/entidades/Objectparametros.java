@@ -5,12 +5,12 @@ package com.example.bd_inventario.entidades;
 public class Objectparametros {
     int Empresa;
     int Sucursal;
-    int Id_usuario;
+    String Id_fecha;
 
-    public Objectparametros(int empresa, int sucursal, int id_usuario) {
+    public Objectparametros(int empresa, int sucursal, String id_fecha) {
         Empresa = empresa;
         Sucursal = sucursal;
-        Id_usuario = id_usuario;
+        Id_fecha = id_fecha;
     }
 
     public int getEmpresa() {
@@ -29,11 +29,11 @@ public class Objectparametros {
         Sucursal = sucursal;
     }
 
-    public int getId_usuario() {
-        return Id_usuario;
+    public String getId_fecha() {
+        return Id_fecha;
     }
 
-    public void setId_usuario(int id_usuario) {
-        Id_usuario = id_usuario;
+    public void setId_fecha(String id_fecha) {
+        Id_fecha = id_fecha;
     }
 }
