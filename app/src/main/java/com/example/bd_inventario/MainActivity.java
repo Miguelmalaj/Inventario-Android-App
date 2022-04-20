@@ -159,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btnSync.setEnabled(false);
                 btnguardar.setEnabled(false);
 
+                btnSalir.setBackgroundColor(0xff778899); //color gris
+                btnSync.setBackgroundColor(0xff778899);
+                btnguardar.setBackgroundColor(0xff778899);
+
+
 
                 //1.- Revisar conexion wifi
                 //2.- Crear funcion para obtener todos los registros de inventarios de HOY.
@@ -168,8 +173,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if(!revisarConexion()){
                     btnguardar.setEnabled(true);
-                    btnSalir.setEnabled(true);
                     btnSync.setEnabled(true);
+                    btnSalir.setEnabled(true);
+
+                    btnSalir.setBackgroundColor(0xff33b5e5); //color azul
+                    btnguardar.setBackgroundColor(0xff33b5e5);
+                    btnSync.setBackgroundColor(0xff33b5e5);
                     Toast.makeText(MainActivity.this, "Favor de conectarse a la red antes de realizar la sincronización.", Toast.LENGTH_LONG).show();
                     return;
 
@@ -206,39 +215,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
                                 Log.i("RESPUESTA=","500");
                                 Toast.makeText(MainActivity.this, "Error al conectar con servidor, verificar conexión VPN" , Toast.LENGTH_LONG).show();
+                                btnguardar.setEnabled(true);
+                                btnSync.setEnabled(true);
+                                btnSalir.setEnabled(true);
+                                btnSalir.setBackgroundColor(0xff33b5e5); //color azul
+                                btnguardar.setBackgroundColor(0xff33b5e5);
+                                btnSync.setBackgroundColor(0xff33b5e5);
                             }
                         });
 
 
-                /*
-                mAPIService
-                        .sincronizaInventario(registrosInventarioHoy)
-                        .enqueue(new Callback<responseRegistrosInventario>() {
-
-                            @Override
-                            public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
-                                Log.i("RESPUESTA=","200");
-                                Log.i("RESPUESTA=",response.body().getMensaje());
-
-                                if(response.body().getEstado() == 2){ //server response 2 si no hay registros
-                                    btnguardar.setEnabled(true);
-                                    btnSync.setEnabled(true);
-                                }
-                                Toast.makeText(MainActivity.this, response.body().getMensaje() , Toast.LENGTH_LONG).show();
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
-                                Log.i("RESPUESTA=","500");
-                                Log.i("RESPUESTA=",t.getMessage());
-                                Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
-
-                            }
-                        });
-                */
-
-                btnSalir.setEnabled(true);
 
             }
 
@@ -260,6 +246,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
                         Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
+                        btnguardar.setEnabled(true);
+                        btnSync.setEnabled(true);
+                        btnSalir.setEnabled(true);
+                        btnSalir.setBackgroundColor(0xff33b5e5); //color azul
+                        btnguardar.setBackgroundColor(0xff33b5e5);
+                        btnSync.setBackgroundColor(0xff33b5e5);
                     }
                 });
 
@@ -285,11 +277,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.i("RESPUESTA=","200");
                         Log.i("RESPUESTA=",response.body().getMensaje());
 
-                        if(response.body().getEstado() == 2){ //server response 2 si no hay registros
+                        /*if(response.body().getEstado() == 2){ //server response 2 si no hay registros
                             btnguardar.setEnabled(true);
                             btnSync.setEnabled(true);
-                        }
+                            btnSalir.setEnabled(true);
+                            btnSalir.setBackgroundColor(0xff33b5e5); //color azul
+                            btnguardar.setBackgroundColor(0xff33b5e5);
+                            btnSync.setBackgroundColor(0xff33b5e5);
+                        }*/
                         Toast.makeText(MainActivity.this, response.body().getMensaje() , Toast.LENGTH_LONG).show();
+                        btnSalir.setEnabled(true);
+                        btnSalir.setBackgroundColor(0xff33b5e5);
 
                     }
 
@@ -395,8 +393,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
-
     }
 
     // Método para guardar datos
@@ -410,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int Sucursal = Integer.parseInt(userLogged.getSucursal().toString());
 
         // Alta de variables para guardar en la base de datos
-//        String fecha_db = txtDate.getText().toString();
+        //String fecha_db = txtDate.getText().toString();
         String fecha_db = getFecha();
         String ubicacion_db = ubication_selected;
         String Vin_db = txtVin.getText().toString();
