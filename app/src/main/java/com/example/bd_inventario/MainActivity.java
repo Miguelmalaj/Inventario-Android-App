@@ -107,8 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //sincronizarEntornoBD();
         }
 
-
-
         setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
 
         List<Ubicaciones> listaUbicacionesUsuario = llenarUbicaciones();
@@ -151,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         btnSync.setOnClickListener(new View.OnClickListener() {
-
 
             @Override
             public void onClick(View view) {
@@ -277,14 +274,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.i("RESPUESTA=","200");
                         Log.i("RESPUESTA=",response.body().getMensaje());
 
-                        /*if(response.body().getEstado() == 2){ //server response 2 si no hay registros
+                        if(response.body().getEstado() == 2){ //server response 2 si no hay registros
                             btnguardar.setEnabled(true);
                             btnSync.setEnabled(true);
-                            btnSalir.setEnabled(true);
-                            btnSalir.setBackgroundColor(0xff33b5e5); //color azul
                             btnguardar.setBackgroundColor(0xff33b5e5);
                             btnSync.setBackgroundColor(0xff33b5e5);
-                        }*/
+                        }
                         Toast.makeText(MainActivity.this, response.body().getMensaje() , Toast.LENGTH_LONG).show();
                         btnSalir.setEnabled(true);
                         btnSalir.setBackgroundColor(0xff33b5e5);

@@ -335,11 +335,6 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","E2-14");
-            registro.put("Empresa",1);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
             registro.put("Nombre_ubicacion","E2-15");
             registro.put("Empresa",1);
             registro.put("Sucursal",1);
@@ -490,11 +485,6 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
 
-            registro.put("Nombre_ubicacion","P-14A");
-            registro.put("Empresa",1);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
             registro.put("Nombre_ubicacion","P-14B");
             registro.put("Empresa",1);
             registro.put("Sucursal",1);
@@ -601,11 +591,6 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             bd.insert("Ubicaciones",null,registro);
 
             registro.put("Nombre_ubicacion","E3-6A");
-            registro.put("Empresa",1);
-            registro.put("Sucursal",1);
-            bd.insert("Ubicaciones",null,registro);
-
-            registro.put("Nombre_ubicacion","E3-6B");
             registro.put("Empresa",1);
             registro.put("Sucursal",1);
             bd.insert("Ubicaciones",null,registro);
