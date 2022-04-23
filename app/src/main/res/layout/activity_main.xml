@@ -19,6 +19,7 @@
             android:orientation="vertical"
             >
 
+
     <TextView
         android:id="@+id/txtAgencia"
         android:layout_width="match_parent"

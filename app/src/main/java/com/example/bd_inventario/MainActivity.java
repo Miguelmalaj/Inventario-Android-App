@@ -131,12 +131,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnscan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 IntentIntegrator integrador = new IntentIntegrator(MainActivity.this);
                 integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrador.setPrompt("Lector - VIN");
                 integrador.setCameraId(0);
+
+
+                integrador.addExtra("MAX_HEIGHT", 100);
+                integrador.addExtra("MAX_WIDTH", 100);
+
                 integrador.setBeepEnabled(true);
                 integrador.setBarcodeImageEnabled(true);
+
                 integrador.initiateScan();
             }
         });
