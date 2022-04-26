@@ -18,6 +18,7 @@ public class LoginActivity extends AppCompatActivity{
     EditText edtxtClave;
     consultas_db dbstart;
     boolean registrosEntabla;
+    Usuario userLogged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +73,16 @@ public class LoginActivity extends AppCompatActivity{
             bundleUsuario = dbstart.getDatosUsuarioBD(nombre.trim(), clave.trim());
 
             if(bundleUsuario != null){
+                //usaremos las variables por separado porque se maneja la activity principal varias veces con el scanner
+                userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
+
                 Intent log_in = new Intent(this,MainActivity.class);
-                log_in.putExtras(bundleUsuario);
+//                log_in.putExtras(bundleUsuario);
+                log_in.putExtra("Empresa", userLogged.getEmpresa().toString());
+                log_in.putExtra("Sucursal", userLogged.getSucursal().toString());
+                log_in.putExtra("Nombre_usuario", userLogged.getNombre());
+                log_in.putExtra("Id_usuario", userLogged.getId_usuario());
+
                 startActivity(log_in);
 
             }

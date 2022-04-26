@@ -4,11 +4,14 @@
     package="com.example.bd_inventario">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-<!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>-->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission> -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,11 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BDInventario"
-        >
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ScannerActivity"
+            android:exported="false" />
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-<!--   this in the above tag application    android:usesCleartextTraffic="true"-->
-
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" /> <!-- this in the above tag application    android:usesCleartextTraffic="true" -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />

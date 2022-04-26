@@ -2,10 +2,12 @@ package com.example.bd_inventario;
 
 import static java.security.AccessController.getContext;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.bd_inventario.Retrofit.Utilidades;
 import com.example.bd_inventario.Retrofit.apiRest;
@@ -36,8 +40,8 @@ import com.example.bd_inventario.response.responseGetUsuarios;
 import com.example.bd_inventario.response.responsePostInventario;
 import com.example.bd_inventario.response.responsePostUsuarios;
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
+/*import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;*/
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,6 +77,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView nombreAgencia;
     ProgressDialog proceso;
 
+    String[] permissions = {
+            Manifest.permission.CAMERA
+    };
+    int PERMI_REQ_CODE = 11;
+
 
 //    consultas_db dbstart;
 //    boolean registrosEntabla;
@@ -83,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkpermission();
 //        btnFecha = findViewById(R.id.btnFecha);
 //        txtFecha = findViewById(R.id.txtFecha);
 //        btnFecha.setOnClickListener(this);
@@ -95,16 +105,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnSalir = findViewById(R.id.btnSalir);
         btnSync = findViewById(R.id.btnSync);
-        bundleUsuario = getIntent().getExtras();
+//        bundleUsuario = getIntent().getExtras();
         setFecha();
         //objeto api rest
         mAPIService = Utilidades.getAPIService();
 
-        if(bundleUsuario != null){
+       /* if(bundleUsuario != null){
             userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
+        }*/
+            userLogged = new Usuario(
+                    getIntent().getStringExtra("Id_usuario"),
+                    getIntent().getStringExtra("Nombre_usuario"),
+                    getIntent().getStringExtra("Empresa"),
+                    getIntent().getStringExtra("Sucursal")
+            );
 
-            //metodo para hacer la sincronización de bd local -remota.
-            //sincronizarEntornoBD();
+
+        //si se ha escaneado el vin desde la activiy, lo validaremos...
+        String VinScaneado = getIntent().getStringExtra("valorVIN");
+        if( VinScaneado != null){
+            Log.d("VIN: ", VinScaneado);
+            txtVin.setText(VinScaneado.substring(0,16));
         }
 
         setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
@@ -128,11 +149,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        btnguardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                guardar();
+            }
+        });
+
         btnscan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //si no podemos obtener de regreso los datos que se envian del login
+                //lo enviaremos a esta activity y los regresaremos.
 
-                IntentIntegrator integrador = new IntentIntegrator(MainActivity.this);
+                        /*getIntent().getStringExtra("Nombre_usuario"),
+                        getIntent().getStringExtra("Empresa"),
+                        getIntent().getStringExtra("Sucursal"),
+                        getIntent().getStringExtra("Id_usuario")*/
+                Intent datos = new Intent(MainActivity.this, ScannerActivity.class);
+                datos.putExtra("Nombre_usuario", getIntent().getStringExtra("Nombre_usuario"));
+                datos.putExtra("Empresa", getIntent().getStringExtra("Empresa"));
+                datos.putExtra("Sucursal", getIntent().getStringExtra("Sucursal"));
+                datos.putExtra("Id_usuario", getIntent().getStringExtra("Id_usuario"));
+                startActivity(datos);
+
+                /*IntentIntegrator integrador = new IntentIntegrator(MainActivity.this);
                 integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrador.setPrompt("Lector - VIN");
                 integrador.setCameraId(0);
@@ -144,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 integrador.setBeepEnabled(true);
                 integrador.setBarcodeImageEnabled(true);
 
-                integrador.initiateScan();
+                integrador.initiateScan();*/
             }
         });
 
@@ -228,11 +269,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
 
-
-
             }
 
         });
+    }
+
+    private boolean checkpermission(){
+        List<String> listPermissions = new ArrayList<>();
+        for(String perm: permissions){
+            if(ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED){
+                listPermissions.add(perm);
+            }
+        }
+        if(!listPermissions.isEmpty()){
+            ActivityCompat.requestPermissions(this, listPermissions.toArray(new String[listPermissions.size()]), PERMI_REQ_CODE);
+            return false;
+        }
+        return true;
     }
 
     private void EliminarRegistrosRemotos() {
@@ -398,17 +451,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // Método para guardar datos
-    public void guardar(View view) {
+    public void guardar() {
         //Inventarios es el nombre de la bd en SQlite
+
         consultas_db admin = new consultas_db(this, "Inventarios", null, 1);
 
         //POR AHORA ENVIAREMOS MANUALMENTE EL ID USUARIO, EMPRESA, SUCURSAL
-        int Id_usuario = Integer.parseInt(userLogged.getId_usuario().toString());
-        int Empresa = Integer.parseInt(userLogged.getEmpresa().toString());
-        int Sucursal = Integer.parseInt(userLogged.getSucursal().toString());
+        int Id_usuario = Integer.parseInt(userLogged.getId_usuario());
+        int Empresa = Integer.parseInt(userLogged.getEmpresa());
+        int Sucursal = Integer.parseInt(userLogged.getSucursal());
 
         // Alta de variables para guardar en la base de datos
-        //String fecha_db = txtDate.getText().toString();
+
         String fecha_db = getFecha();
         String ubicacion_db = ubication_selected;
         String Vin_db = txtVin.getText().toString();
@@ -450,18 +504,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                }
 
         } else {
-            //  Log.d("no validado","no validado");
+
             Toast.makeText(this, "Favor de llenar todos los campos", Toast.LENGTH_LONG).show();
         }
 
         //limpiar campos
-//        txtFecha.setText("");
-        admin.close();
+//        admin.close();
+
         txtVin.setText("");
     }
 
     // Método para escanear
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
@@ -475,7 +529,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.onActivityResult(requestCode, resultCode, data);
         }
 
-    }
+    }*/
 
     private List<Ubicaciones> llenarUbicaciones(){
         int Empresa = Integer.parseInt(userLogged.getEmpresa().toString());
