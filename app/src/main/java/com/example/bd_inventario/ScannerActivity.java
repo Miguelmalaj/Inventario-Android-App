@@ -42,6 +42,7 @@ public class ScannerActivity extends AppCompatActivity {
                         regresar.putExtra("Empresa", getIntent().getStringExtra("Empresa"));
                         regresar.putExtra("Sucursal", getIntent().getStringExtra("Sucursal"));
                         regresar.putExtra("Id_usuario", getIntent().getStringExtra("Id_usuario"));
+                        regresar.putExtra("ubicacionSpinner", getIntent().getStringExtra("ubicacionSpinner"));
                         regresar.putExtra("valorVIN", result.getText());
                         startActivity(regresar);
                     }

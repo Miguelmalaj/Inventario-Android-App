@@ -1,10 +1,6 @@
 package com.example.bd_inventario;
 
-import static java.security.AccessController.getContext;
-
 import android.Manifest;
-import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,17 +26,9 @@ import com.example.bd_inventario.Retrofit.Utilidades;
 import com.example.bd_inventario.Retrofit.apiRest;
 import com.example.bd_inventario.entidades.Objectparametros;
 import com.example.bd_inventario.entidades.Usuarios;
-import com.example.bd_inventario.entidades.UsuariosEnviados;
-import com.example.bd_inventario.entidades.inventarioEnviado;
 import com.example.bd_inventario.entidades.listaInventario;
 import com.example.bd_inventario.entidades.responseRegistrosInventario;
 import com.example.bd_inventario.response.responseGetInventario;
-import com.example.bd_inventario.response.responseGetUsuarios;
-import com.example.bd_inventario.response.responsePostInventario;
-import com.example.bd_inventario.response.responsePostUsuarios;
-import com.google.gson.Gson;
-/*import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;*/
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,41 +37,32 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private apiRest mAPIService;
     private List<Usuarios> lista = new ArrayList<>();
 
-    Button btnFecha;
     Button btnSalir;
-    EditText txtFecha;
     TextView txtDate;
-//    Spinner spubicacion;
     Button btnguardar;
     Button btnscan;
     Button btnSync;
+    String ubicacionSpinner;
+    String VinScaneado;
 
     EditText txtVin;
     private int dia, mes, anio;
     private Spinner spubica;
-    //variable global para selección de ubicación
     String ubication_selected;
     Bundle bundleUsuario;
     Usuario userLogged;
     TextView nombreAgencia;
-    ProgressDialog proceso;
+    int PERMI_REQ_CODE = 11;
 
     String[] permissions = {
             Manifest.permission.CAMERA
     };
-    int PERMI_REQ_CODE = 11;
-
-
-//    consultas_db dbstart;
-//    boolean registrosEntabla;
 
 
     @Override
@@ -93,55 +71,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         checkpermission();
-//        btnFecha = findViewById(R.id.btnFecha);
-//        txtFecha = findViewById(R.id.txtFecha);
-//        btnFecha.setOnClickListener(this);
         txtDate = findViewById(R.id.txtDate);
         spubica = findViewById(R.id.spubicacion);
         btnguardar = findViewById(R.id.btnguardar);
         btnscan = findViewById(R.id.btnScaner);
         txtVin = findViewById(R.id.txtVin);
         nombreAgencia = findViewById(R.id.txtAgencia);
-
         btnSalir = findViewById(R.id.btnSalir);
         btnSync = findViewById(R.id.btnSync);
-//        bundleUsuario = getIntent().getExtras();
-        setFecha();
         //objeto api rest
         mAPIService = Utilidades.getAPIService();
+        setFecha();
 
+        //bundleUsuario = getIntent().getExtras();
        /* if(bundleUsuario != null){
             userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
         }*/
-            userLogged = new Usuario(
+        userLogged = new Usuario(
                     getIntent().getStringExtra("Id_usuario"),
                     getIntent().getStringExtra("Nombre_usuario"),
                     getIntent().getStringExtra("Empresa"),
                     getIntent().getStringExtra("Sucursal")
-            );
+        );
 
+        setNombreAgencia(
+                Integer.parseInt(userLogged.getEmpresa()),
+                Integer.parseInt(userLogged.getSucursal())
+        );
 
-        //si se ha escaneado el vin desde la activiy, lo validaremos...
-        String VinScaneado = getIntent().getStringExtra("valorVIN");
-        if( VinScaneado != null){
-            Log.d("VIN: ", VinScaneado);
-            txtVin.setText(VinScaneado.substring(0,16));
-        }
+//        ubicacionSpinner = getIntent().getStringExtra("ubicacionSpinner");
+        VinScaneado = getIntent().getStringExtra("valorVIN");
+        setVinEscaneado(VinScaneado);
+        ubicacionSpinner = setUbicacionSpinner(getIntent().getStringExtra("ubicacionSpinner"));
 
-        setNombreAgencia(Integer.parseInt(userLogged.getEmpresa().toString()), Integer.parseInt(userLogged.getSucursal().toString()));
 
         List<Ubicaciones> listaUbicacionesUsuario = llenarUbicaciones();
-
         ArrayAdapter<Ubicaciones> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, listaUbicacionesUsuario);
 
         spubica.setAdapter(adapter);
+        spubica.setSelection(Integer.parseInt(ubicacionSpinner));
 
-        //método que está a la escucha de la ubicación seleccionada por el usuario
         spubica.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 ubication_selected = adapterView.getSelectedItem().toString();
+                ubicacionSpinner = String.valueOf(i);
             }
 
             @Override
@@ -159,18 +134,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnscan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //si no podemos obtener de regreso los datos que se envian del login
-                //lo enviaremos a esta activity y los regresaremos.
 
-                        /*getIntent().getStringExtra("Nombre_usuario"),
-                        getIntent().getStringExtra("Empresa"),
-                        getIntent().getStringExtra("Sucursal"),
-                        getIntent().getStringExtra("Id_usuario")*/
                 Intent datos = new Intent(MainActivity.this, ScannerActivity.class);
                 datos.putExtra("Nombre_usuario", getIntent().getStringExtra("Nombre_usuario"));
                 datos.putExtra("Empresa", getIntent().getStringExtra("Empresa"));
                 datos.putExtra("Sucursal", getIntent().getStringExtra("Sucursal"));
                 datos.putExtra("Id_usuario", getIntent().getStringExtra("Id_usuario"));
+                datos.putExtra("ubicacionSpinner", ubicacionSpinner);
                 startActivity(datos);
 
                 /*IntentIntegrator integrador = new IntentIntegrator(MainActivity.this);
@@ -208,8 +178,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btnSync.setBackgroundColor(0xff778899);
                 btnguardar.setBackgroundColor(0xff778899);
 
-
-
                 //1.- Revisar conexion wifi
                 //2.- Crear funcion para obtener todos los registros de inventarios de HOY.
                 //3.- Obtener los registros (validar si es null)
@@ -228,15 +196,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
 
                 }
-
-                /*consultas_db queryLocal = new consultas_db(MainActivity.this, "Inventarios", null, 1);
-                List<listaInventario> registrosInventarioHoy = queryLocal.getInventarioDeHoy(
-                        Integer.parseInt(userLogged.getEmpresa()),
-                        Integer.parseInt(userLogged.getSucursal()),
-                        Integer.parseInt(userLogged.getId_usuario()),
-                        getFecha().trim()
-                );
-                queryLocal.close();*/
 
                 mAPIService.existeRegistrosDeHoy(new Objectparametros(Integer.parseInt(userLogged.getEmpresa()),Integer.parseInt(userLogged.getSucursal()),getFecha()))
                         .enqueue(new Callback<responseRegistrosInventario>() {
@@ -272,6 +231,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         });
+    }
+
+    private String setUbicacionSpinner(String ubicacionSpinner) {
+        if(ubicacionSpinner == null){
+            ubicacionSpinner = String.valueOf(0);
+        }
+        return ubicacionSpinner;
+    }
+
+    private void setVinEscaneado(String vinScaneado) {
+        if( VinScaneado != null){
+            if (VinScaneado.length() > 17) {
+                txtVin.setText(VinScaneado.substring(0, 17));
+            } else {
+                txtVin.setText(VinScaneado);
+                Toast.makeText(MainActivity.this, "VIN con menos de 17 caracteres.", Toast.LENGTH_LONG).show();
+            }
+
+        }
     }
 
     private boolean checkpermission(){
@@ -413,19 +391,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     *   1.2- DENTRO DE LA CONSULTA REALIZAR EL FOR EACH Y AGREGAR TODOS LOS REGISTROS
                     * */
 
-
-                    /*Gson objetoConsola = new Gson();
-                    for (listaInventario objeto: response.body().getInventario()) {
-//                            Log.i("pruebaREST", objetoConsola.toJson(objeto));
-                        Log.d("pruebaREST", objetoConsola.toJson(objeto.getVIN()));
-
-                    }*/
-
                     //VALIDAR SI DATA ES NULL
                     //REGISTRAR DATA REMOTO
                     boolean registrados = sync.registroRemotoALocal(response.body());
                     if(registrados) Log.d("LOG:==","Se han registrados rows remoto-local");
-//                    imprimirPrueba(response.body());
 
                 }
 
@@ -556,11 +525,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String nomAgencia = bdagencia.getNombreAgencia(Empresa, Sucursal);
         nombreAgencia.setText(nomAgencia);
-    }
-
-    public void imprimirPrueba(responseGetInventario objecto){
-        Toast.makeText(this, objecto.toString(), Toast.LENGTH_LONG).show();
-            return;
     }
 
     //método para verificar la conexión phone | wifi
