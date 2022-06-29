@@ -24,7 +24,8 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper{
                         "Empresa integer, "+
                         "Sucursal integer, "+
                         "Id_usuario integer, "+
-                        "Auditor text)"
+                        "Auditor text, "+
+                        "QRCapturado text)"
         );
 
         //crear tabla usuarios

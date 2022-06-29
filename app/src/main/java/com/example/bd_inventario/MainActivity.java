@@ -91,7 +91,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     getIntent().getStringExtra("Id_usuario"),
                     getIntent().getStringExtra("Nombre_usuario"),
                     getIntent().getStringExtra("Empresa"),
-                    getIntent().getStringExtra("Sucursal")
+                    getIntent().getStringExtra("Sucursal"),
+                    getIntent().getStringExtra("Auditor")
         );
 
         setNombreAgencia(
@@ -140,22 +141,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 datos.putExtra("Empresa", getIntent().getStringExtra("Empresa"));
                 datos.putExtra("Sucursal", getIntent().getStringExtra("Sucursal"));
                 datos.putExtra("Id_usuario", getIntent().getStringExtra("Id_usuario"));
+                datos.putExtra("Auditor", getIntent().getStringExtra("Auditor"));
                 datos.putExtra("ubicacionSpinner", ubicacionSpinner);
                 startActivity(datos);
 
-                /*IntentIntegrator integrador = new IntentIntegrator(MainActivity.this);
-                integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-                integrador.setPrompt("Lector - VIN");
-                integrador.setCameraId(0);
-
-
-                integrador.addExtra("MAX_HEIGHT", 100);
-                integrador.addExtra("MAX_WIDTH", 100);
-
-                integrador.setBeepEnabled(true);
-                integrador.setBarcodeImageEnabled(true);
-
-                integrador.initiateScan();*/
             }
         });
 
@@ -196,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
 
                 }
+
+                /*
+                En este punto se necesita realizar la validación según el tipo de usuario correspondiente, contador o auditor
+                VALIDACIÓN EN API REST
+                */
 
                 mAPIService.existeRegistrosDeHoy(new Objectparametros(Integer.parseInt(userLogged.getEmpresa()),Integer.parseInt(userLogged.getSucursal()),getFecha()))
                         .enqueue(new Callback<responseRegistrosInventario>() {
@@ -425,31 +419,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         consultas_db admin = new consultas_db(this, "Inventarios", null, 1);
 
-        //POR AHORA ENVIAREMOS MANUALMENTE EL ID USUARIO, EMPRESA, SUCURSAL
         int Id_usuario = Integer.parseInt(userLogged.getId_usuario());
         int Empresa = Integer.parseInt(userLogged.getEmpresa());
         int Sucursal = Integer.parseInt(userLogged.getSucursal());
-
-        // Alta de variables para guardar en la base de datos
-
         String fecha_db = getFecha();
         String ubicacion_db = ubication_selected;
         String Vin_db = txtVin.getText().toString();
-
+        /*NUEVA VARIABLE EN FUNCIÓN*/
+        String Auditor = userLogged.getAuditor();
+        String QRCapturado = "N";
 
         if ((!fecha_db.isEmpty()) && (!ubicacion_db.isEmpty()) && (!Vin_db.isEmpty())) {
-            //1.- Validar si el VIN YA existe
-            //1.1.- Si ya existe lo actualizamos
-            //1.2.- Si no existe solo registramos
-            //2.- Validar si el registro se realiza correctamente
 
-                Long resultado_registro = admin.RegistrarInventario(
+            boolean isVINCreated = admin.isThisRegisterInBD(Vin_db,fecha_db,Empresa,Sucursal,Auditor);
+
+            if(!isVINCreated) {
+                Long resultado_registro = admin.RegistrarInventario( fecha_db, ubicacion_db, Vin_db, Id_usuario, Empresa, Sucursal, Auditor, QRCapturado);
+                if ( resultado_registro != -1L ) Toast.makeText(this, "Registro Exitoso", Toast.LENGTH_LONG).show();
+                if ( resultado_registro == -1L ) Toast.makeText(this, "Ocurrió un error al registrar el VIN", Toast.LENGTH_LONG).show();
+
+            }
+
+            if(isVINCreated) {
+                int resultado_actualizar = admin.ActualizarInventario( fecha_db, ubicacion_db, Vin_db, Id_usuario, Empresa, Sucursal, Auditor, QRCapturado);
+                if ( resultado_actualizar != 1 ) Toast.makeText(this, "No se logró actualizar el registro", Toast.LENGTH_LONG).show();
+                if ( resultado_actualizar == 1 ) Toast.makeText(this, "El registro se actualizó en la BD", Toast.LENGTH_LONG).show();
+
+            }
+
+                /*Long resultado_registro = admin.RegistrarInventario(
                         fecha_db,
                         ubicacion_db,
                         Vin_db,
                         Id_usuario,
                         Empresa,
-                        Sucursal
+                        Sucursal,
+                        Auditor,
+                        QRCapturado
                 );
 
                if(resultado_registro != -1L){
@@ -462,7 +468,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Vin_db,
                         Id_usuario,
                         Empresa,
-                        Sucursal
+                        Sucursal,
+                        Auditor,
+                        QRCapturado
                 );
 
                 if(resultado_actualizar != 1){
@@ -470,35 +478,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 Toast.makeText(this, "El registro se actualizó en la BD", Toast.LENGTH_LONG).show();
 
-               }
+               }*/
+
+
 
         } else {
 
             Toast.makeText(this, "Favor de llenar todos los campos", Toast.LENGTH_LONG).show();
         }
 
-        //limpiar campos
-//        admin.close();
-
         txtVin.setText("");
     }
 
-    // Método para escanear
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Lectura Cancelada", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
-                txtVin.setText(result.getContents());
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-
-    }*/
 
     private List<Ubicaciones> llenarUbicaciones(){
         int Empresa = Integer.parseInt(userLogged.getEmpresa().toString());

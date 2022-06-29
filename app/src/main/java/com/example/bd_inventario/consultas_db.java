@@ -35,7 +35,9 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             String Vin_db,
             int Id_usuario,
             int Empresa,
-            int Sucursal
+            int Sucursal,
+            String Auditor,
+            String QRCapturado
     ){
         Long resultBd = -1L;
         try{
@@ -47,6 +49,8 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Empresa", Empresa);
             registro.put("Sucursal", Sucursal);
             registro.put("Id_usuario", Id_usuario);
+            registro.put("Auditor", Auditor);
+            registro.put("QRCapturado", QRCapturado);
             resultBd = bd.insert("Inventario", null, registro);
 //            Log.d("RESULTADO REGISTRO: ",resultBd.toString());
             bd.close();
@@ -67,7 +71,9 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             String Vin_db,
             int Id_usuario,
             int Empresa,
-            int Sucursal
+            int Sucursal,
+            String Auditor,
+            String QRCapturado
     ){
         int resultBd=-1;
         try{
@@ -80,10 +86,10 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Empresa", Empresa);
             registro.put("Sucursal", Sucursal);
             registro.put("Id_usuario", Id_usuario);
+            registro.put("Auditor", Auditor);
+            registro.put("QRCapturado", QRCapturado);
 
             resultBd = bd.update("Inventario",registro,"VIN='"+Vin_db+"'",null);
-//            resultBd = bd.insert("Inventario", null, registro);
-            Log.d("actualizar registro:==== ",String.valueOf(resultBd));
 //            Log.d("RESULTADO REGISTRO: ",resultBd.toString());
             bd.close();
 
@@ -1028,6 +1034,33 @@ public class consultas_db extends AdminSQLiteOpenHelper{
         return existeregistro;
     }
 
+    public boolean isThisRegisterInBD(
+            String VIN,
+            String Id_fecha,
+            int Empresa,
+            int Sucursal,
+            String Auditor
+    ){
+        boolean isRegisterCreated = false;
+
+        try {
+            SQLiteDatabase bd = this.getWritableDatabase();
+            /*Se validará la existencia del registro con los campos VIN, ID_FECHA, EMPRESA, SUCURSAL, AUDITOR*/
+            Cursor cursor = bd.rawQuery("SELECT * FROM Inventario WHERE VIN ='"+VIN+"' AND Id_fecha='"+Id_fecha+"' AND Empresa="+Empresa+" AND Sucursal="+Sucursal+" AND Auditor='"+Auditor+"'", null);
+            if(cursor.moveToFirst()) isRegisterCreated = true;
+            bd.close();
+
+        }catch ( SQLiteException e ) {
+            try {
+                throw new IOException(e);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        return isRegisterCreated;
+    }
+
     public boolean ExisteRegistrosEnTablaInventario(){
         boolean existeregistro = false;
         try{
@@ -1078,7 +1111,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             SQLiteDatabase bd = this.getWritableDatabase();
 
             Cursor cursor = bd.rawQuery(
-                    "SELECT Id_usuario, Nombre_usuario, Empresa, Sucursal FROM Usuarios WHERE Nombre_usuario='"+ nombreusuario +"' AND Clave='"+clave+"'",null
+                    "SELECT Id_usuario, Nombre_usuario, Empresa, Sucursal, Auditor FROM Usuarios WHERE Nombre_usuario='"+ nombreusuario +"' AND Clave='"+clave+"'",null
             );
 
             if(cursor.moveToFirst()){
@@ -1086,6 +1119,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
                 String Nombre_usuario = cursor.getString(1);
                 String Empresa = cursor.getString(2);
                 String Sucursal = cursor.getString(3);
+                String Auditor = cursor.getString(4);
 
                 /*Log.d("Nombre_usuario:==",String.valueOf(Nombre_usuario));
                 Log.d("Empresa:==",String.valueOf(Empresa));
@@ -1094,7 +1128,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
                 //1.-crear el objeto usuario
                 //2.-poner el objeto usuario en el Bundle
                 //3.-Retornar el bundle
-                usuario = new Usuario(Id_usuario, Nombre_usuario, Empresa, Sucursal);
+                usuario = new Usuario(Id_usuario, Nombre_usuario, Empresa, Sucursal, Auditor);
                 bundleUsuario.putSerializable("usuario", usuario);
 
             }

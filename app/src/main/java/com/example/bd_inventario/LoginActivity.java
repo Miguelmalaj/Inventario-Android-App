@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity{
                 log_in.putExtra("Sucursal", userLogged.getSucursal().toString());
                 log_in.putExtra("Nombre_usuario", userLogged.getNombre());
                 log_in.putExtra("Id_usuario", userLogged.getId_usuario());
+                log_in.putExtra("Auditor", userLogged.getAuditor());
 
                 startActivity(log_in);
 
