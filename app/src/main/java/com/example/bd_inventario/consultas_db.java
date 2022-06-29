@@ -103,39 +103,84 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             SQLiteDatabase bd = this.getWritableDatabase();
             ContentValues registro = new ContentValues();
 
-            //primer usuario mochis
+            //primer usuario mochis CONTADOR
             registro.put("Nombre_usuario", "invmochis");
             registro.put("Empresa", 1);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invmochis1");
+            registro.put("Auditor", "N");
             bd.insert("Usuarios",null,registro);
 
-            //segundo usuario guasave
+            //primer usuario mochis AUDITOR
+            registro.put("Nombre_usuario", "831Auditoria");
+            registro.put("Empresa", 1);
+            registro.put("Sucursal", 1);
+            registro.put("Clave", "AuditMochis");
+            registro.put("Auditor", "S");
+            bd.insert("Usuarios",null,registro);
+
+            //segundo usuario guasave CONTADOR
             registro.put("Nombre_usuario", "invgve");
             registro.put("Empresa", 3);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invguasave2");
+            registro.put("Auditor", "N");
             bd.insert("Usuarios",null,registro);//segundo usuario guasave
 
-            //tercer usuario zapata
+            //segundo usuario guasave AUDITOR
+            registro.put("Nombre_usuario", "816Auditoria");
+            registro.put("Empresa", 3);
+            registro.put("Sucursal", 1);
+            registro.put("Clave", "AuditGuasave");
+            registro.put("Auditor", "S");
+            bd.insert("Usuarios",null,registro);
+
+            //tercer usuario zapata CONTADOR
             registro.put("Nombre_usuario", "invzap");
             registro.put("Empresa", 5);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invzapata3");
-            bd.insert("Usuarios",null,registro);//segundo usuario guasave
+            registro.put("Auditor", "N");
+            bd.insert("Usuarios",null,registro);
 
-            //cuarto usuario aeropuerto
+            //tercer usuario zapata AUDITOR
+            registro.put("Nombre_usuario", "814ZAuditoria");
+            registro.put("Empresa", 5);
+            registro.put("Sucursal", 1);
+            registro.put("Clave", "AuditZapata");
+            registro.put("Auditor", "S");
+            bd.insert("Usuarios",null,registro);
+
+            //cuarto usuario aeropuerto CONTADOR
             registro.put("Nombre_usuario", "invaero");
             registro.put("Empresa", 5);
             registro.put("Sucursal", 2);
             registro.put("Clave", "invaero4");
-            bd.insert("Usuarios",null,registro);//segundo usuario guasave
+            registro.put("Auditor", "N");
+            bd.insert("Usuarios",null,registro);
 
-            //quinto usuario cadillac
+            //cuarto usuario aeropuerto AUDITOR
+            registro.put("Nombre_usuario", "814AAuditoria");
+            registro.put("Empresa", 5);
+            registro.put("Sucursal", 2);
+            registro.put("Clave", "AuditAero");
+            registro.put("Auditor", "S");
+            bd.insert("Usuarios",null,registro);
+
+            //quinto usuario cadillac CONTADOR
             registro.put("Nombre_usuario", "invcad");
             registro.put("Empresa", 7);
             registro.put("Sucursal", 1);
             registro.put("Clave", "invcad5");
+            registro.put("Auditor", "N");
+            bd.insert("Usuarios",null,registro);
+
+            //quinto usuario cadillac AUDITOR
+            registro.put("Nombre_usuario", "819CAuditoria");
+            registro.put("Empresa", 7);
+            registro.put("Sucursal", 1);
+            registro.put("Clave", "AuditCad");
+            registro.put("Auditor", "S");
             bd.insert("Usuarios",null,registro);
 
             bd.close();
@@ -963,6 +1008,10 @@ public class consultas_db extends AdminSQLiteOpenHelper{
         boolean existeregistro = false;
         try{
             SQLiteDatabase bd = this.getWritableDatabase();
+
+            /*seleccionamos la tabla USUARIOS solo para validar no un registro
+            * si no para comprobar la existencia de la misma*/
+
             Cursor cursor = bd.rawQuery("SELECT * FROM Usuarios", null);
 //            cursor.moveToFirst(); == se va al primer registro en caso de existencia
 //            if(cursor.getCount() == cuenta el total de registros obtenidos

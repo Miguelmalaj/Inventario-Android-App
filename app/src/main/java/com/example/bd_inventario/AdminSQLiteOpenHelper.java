@@ -23,7 +23,8 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper{
                         "Nombre_ubicacion text, " +
                         "Empresa integer, "+
                         "Sucursal integer, "+
-                        "Id_usuario integer)"
+                        "Id_usuario integer, "+
+                        "Auditor text)"
         );
 
         //crear tabla usuarios
@@ -33,7 +34,8 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper{
                         "Nombre_usuario text unique, " +
                         "Empresa integer, " +
                         "Sucursal integer," +
-                        "Clave text)"
+                        "Clave text," +
+                        "Auditor text)"
           );
 
 
