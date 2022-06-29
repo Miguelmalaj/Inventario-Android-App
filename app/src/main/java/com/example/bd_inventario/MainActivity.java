@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnSync;
     String ubicacionSpinner;
     String VinScaneado;
+    String QRCapturado;
 
     EditText txtVin;
     private int dia, mes, anio;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
 //        ubicacionSpinner = getIntent().getStringExtra("ubicacionSpinner");
+        QRCapturado = "S";
         VinScaneado = getIntent().getStringExtra("valorVIN");
         setVinEscaneado(VinScaneado);
         ubicacionSpinner = setUbicacionSpinner(getIntent().getStringExtra("ubicacionSpinner"));
@@ -235,7 +237,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setVinEscaneado(String vinScaneado) {
+
         if( VinScaneado != null){
+            QRCapturado = "N";
+
             if (VinScaneado.length() > 17) {
                 txtVin.setText(VinScaneado.substring(0, 17));
             } else {
@@ -243,7 +248,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, "VIN con menos de 17 caracteres.", Toast.LENGTH_LONG).show();
             }
 
+            return;
         }
+
     }
 
     private boolean checkpermission(){
@@ -427,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String Vin_db = txtVin.getText().toString();
         /*NUEVA VARIABLE EN FUNCIÓN*/
         String Auditor = userLogged.getAuditor();
-        String QRCapturado = "N";
+//        String QRCapturado = "N";
 
         if ((!fecha_db.isEmpty()) && (!ubicacion_db.isEmpty()) && (!Vin_db.isEmpty())) {
 
@@ -437,60 +444,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Long resultado_registro = admin.RegistrarInventario( fecha_db, ubicacion_db, Vin_db, Id_usuario, Empresa, Sucursal, Auditor, QRCapturado);
                 if ( resultado_registro != -1L ) Toast.makeText(this, "Registro Exitoso", Toast.LENGTH_LONG).show();
                 if ( resultado_registro == -1L ) Toast.makeText(this, "Ocurrió un error al registrar el VIN", Toast.LENGTH_LONG).show();
-
+                QRCapturado = "S";
             }
 
             if(isVINCreated) {
                 int resultado_actualizar = admin.ActualizarInventario( fecha_db, ubicacion_db, Vin_db, Id_usuario, Empresa, Sucursal, Auditor, QRCapturado);
                 if ( resultado_actualizar != 1 ) Toast.makeText(this, "No se logró actualizar el registro", Toast.LENGTH_LONG).show();
                 if ( resultado_actualizar == 1 ) Toast.makeText(this, "El registro se actualizó en la BD", Toast.LENGTH_LONG).show();
-
+                QRCapturado = "S";
             }
 
-                /*Long resultado_registro = admin.RegistrarInventario(
-                        fecha_db,
-                        ubicacion_db,
-                        Vin_db,
-                        Id_usuario,
-                        Empresa,
-                        Sucursal,
-                        Auditor,
-                        QRCapturado
-                );
-
-               if(resultado_registro != -1L){
-                Toast.makeText(this, "Registro Exitoso", Toast.LENGTH_LONG).show();
-
-               }else{
-                int resultado_actualizar = admin.ActualizarInventario(
-                        fecha_db,
-                        ubicacion_db,
-                        Vin_db,
-                        Id_usuario,
-                        Empresa,
-                        Sucursal,
-                        Auditor,
-                        QRCapturado
-                );
-
-                if(resultado_actualizar != 1){
-                    Toast.makeText(this, "No se logró actualizar el registro", Toast.LENGTH_LONG).show();
-                }
-                Toast.makeText(this, "El registro se actualizó en la BD", Toast.LENGTH_LONG).show();
-
-               }*/
-
-
-
         } else {
-
             Toast.makeText(this, "Favor de llenar todos los campos", Toast.LENGTH_LONG).show();
         }
 
         txtVin.setText("");
     }
-
-
 
     private List<Ubicaciones> llenarUbicaciones(){
         int Empresa = Integer.parseInt(userLogged.getEmpresa().toString());
