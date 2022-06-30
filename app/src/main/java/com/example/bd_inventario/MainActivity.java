@@ -191,14 +191,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 if(response.body().getEstado() == 2){ //server response 2 si no hay registros
                                     Log.i("RESPUESTA=",response.body().getMensaje());
-                                    /*sincronizarPrimeraVez();*/
-                                    Log.d("respuestaSincronizar:", "No hay registros");
+                                    sincronizarPrimeraVez();
+
                                 }
 
                                 if(response.body().getEstado() == 1){ //server response 1 si hay registros
                                     Log.i("RESPUESTA=",response.body().getMensaje());
-                                    /*EliminarRegistrosRemotos();*/
-                                    Log.d("respuestaSincronizar:", "Si hay registros");
+                                    EliminarRegistrosRemotos();
+
                                 }
 
                             }
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void EliminarRegistrosRemotos() {
         Log.i("RESPUESTA=","accedimos a metodo sincrnoizarActualizar");
-        String cadena = userLogged.getEmpresa() + "-" +userLogged.getSucursal() + "-"+getFecha();
+        String cadena = userLogged.getEmpresa() + "-" +userLogged.getSucursal() + "-"+getFecha()+ "-"+userLogged.getId_usuario()+"-"+userLogged.getAuditor();
 
         mAPIService.eliminarRegistrosDeHoy(cadena)
                 .enqueue(new Callback<responseRegistrosInventario>() {
@@ -322,7 +322,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.i("RESPUESTA=","500");
                         Log.i("RESPUESTA=",t.getMessage());
                         Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
-
+                        btnguardar.setEnabled(true);
+                        btnSync.setEnabled(true);
+                        btnguardar.setBackgroundColor(0xff33b5e5);
+                        btnSync.setBackgroundColor(0xff33b5e5);
+                        btnSalir.setEnabled(true);
+                        btnSalir.setBackgroundColor(0xff33b5e5);
                     }
                 });
     }

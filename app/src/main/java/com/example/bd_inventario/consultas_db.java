@@ -89,7 +89,7 @@ public class consultas_db extends AdminSQLiteOpenHelper{
             registro.put("Auditor", Auditor);
             registro.put("QRCapturado", QRCapturado);
 
-            resultBd = bd.update("Inventario",registro,"VIN='"+Vin_db+"'",null);
+            resultBd = bd.update("Inventario",registro,"VIN='"+Vin_db+"' AND Id_fecha='"+fecha_db+"' AND Empresa="+Empresa+" AND Sucursal="+Sucursal+" AND Auditor='"+Auditor+"'",null);
 //            Log.d("RESULTADO REGISTRO: ",resultBd.toString());
             bd.close();
 
@@ -1191,7 +1191,9 @@ public class consultas_db extends AdminSQLiteOpenHelper{
                              filas.getString(3),//Nombre_ubicacion
                              Integer.parseInt(filas.getString(4)),//Empresa
                              Integer.parseInt(filas.getString(5)),//Sucursal
-                             Integer.parseInt(filas.getString(6))//Id_usuario
+                             Integer.parseInt(filas.getString(6)),//Id_usuario
+                             filas.getString(7), //Auditor
+                             filas.getString(8)//QRCapturado
                      ));
 
                  }while(filas.moveToNext());

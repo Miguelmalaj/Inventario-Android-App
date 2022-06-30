@@ -8,8 +8,10 @@ public class listaInventario {
     int Empresa;
     int Sucursal;
     int Id_usuario;
+    String Auditor;
+    String QRCapturado;
 
-    public listaInventario(int id_inventario, String VIN, String id_fecha, String nombre_ubicacion, int empresa, int sucursal, int id_usuario) {
+    public listaInventario(int id_inventario, String VIN, String id_fecha, String nombre_ubicacion, int empresa, int sucursal, int id_usuario, String auditor, String qrCapturado) {
         Id_inventario = id_inventario;
         this.VIN = VIN;
         Id_fecha = id_fecha;
@@ -17,6 +19,8 @@ public class listaInventario {
         Empresa = empresa;
         Sucursal = sucursal;
         Id_usuario = id_usuario;
+        Auditor = auditor;
+        QRCapturado = qrCapturado;
     }
 
     public int getId_inventario() {
@@ -33,6 +37,22 @@ public class listaInventario {
 
     public void setVIN(String VIN) {
         this.VIN = VIN;
+    }
+
+    public String getAuditor() {
+        return Auditor;
+    }
+
+    public void setAuditor(String auditor) {
+        this.Auditor = auditor;
+    }
+
+    public String QRCapturado() {
+        return QRCapturado;
+    }
+
+    public void setQRCapturado(String qrCapturado) {
+        this.QRCapturado = qrCapturado;
     }
 
     public String getId_fecha() {
