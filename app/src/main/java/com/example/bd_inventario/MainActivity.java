@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAPIService = Utilidades.getAPIService();
         setFecha();
 
-        //bundleUsuario = getIntent().getExtras();
-       /* if(bundleUsuario != null){
-            userLogged = (Usuario)bundleUsuario.getSerializable("usuario");
-        }*/
         userLogged = new Usuario(
                     getIntent().getStringExtra("Id_usuario"),
                     getIntent().getStringExtra("Nombre_usuario"),
@@ -165,15 +161,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btnSync.setEnabled(false);
                 btnguardar.setEnabled(false);
 
-                btnSalir.setBackgroundColor(0xff778899); //color gris
+                btnSalir.setBackgroundColor(0xff778899);
                 btnSync.setBackgroundColor(0xff778899);
                 btnguardar.setBackgroundColor(0xff778899);
-
-                //1.- Revisar conexion wifi
-                //2.- Crear funcion para obtener todos los registros de inventarios de HOY.
-                //3.- Obtener los registros (validar si es null)
-                //4.- Crear modelo donde serán guardados todos los registros.
-                //5.-
 
                 if(!revisarConexion()){
                     btnguardar.setEnabled(true);
@@ -193,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 VALIDACIÓN EN API REST
                 */
 
-                mAPIService.existeRegistrosDeHoy(new Objectparametros(Integer.parseInt(userLogged.getEmpresa()),Integer.parseInt(userLogged.getSucursal()),getFecha()))
+                mAPIService.existeRegistrosDeHoy(new Objectparametros(Integer.parseInt(userLogged.getEmpresa()),Integer.parseInt(userLogged.getSucursal()),getFecha(), userLogged.getAuditor()))
                         .enqueue(new Callback<responseRegistrosInventario>() {
                             @Override
                             public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
@@ -201,12 +191,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 if(response.body().getEstado() == 2){ //server response 2 si no hay registros
                                     Log.i("RESPUESTA=",response.body().getMensaje());
-                                    sincronizarPrimeraVez();
+                                    /*sincronizarPrimeraVez();*/
+                                    Log.d("respuestaSincronizar:", "No hay registros");
                                 }
 
                                 if(response.body().getEstado() == 1){ //server response 1 si hay registros
                                     Log.i("RESPUESTA=",response.body().getMensaje());
-                                    EliminarRegistrosRemotos();
+                                    /*EliminarRegistrosRemotos();*/
+                                    Log.d("respuestaSincronizar:", "Si hay registros");
                                 }
 
                             }
@@ -365,35 +357,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void sincronizarEntornoBD(){
-        boolean registrosEnTablaInv = false;
+        /*boolean registrosEnTablaInv = false;
         consultas_db sync = new consultas_db(this, "Inventarios", null, 1);
         registrosEnTablaInv = sync.ExisteRegistrosEnTablaInventario();
 
         if(!registrosEnTablaInv){
             Toast.makeText(this, "Debes sincronizar la BD.", Toast.LENGTH_LONG).show();
-            /*
-            * 0.- REVISAR SI HAY CONEXION A WIFI !!!!!!!!!!!!!!!!!!!!!
-            * 1.- REALIZAR PETICION GET PARA OBTENER REGISTROS DEL USUARIO()
-            * 2.- ACTUALIZAR BD LOCAL DE LOS DATOS DESCARGADOS DE LA BD REMOTA.
-            * 3.- (paso 2) INSERTAR LOS REGISTROS DESCARGADOS DESDE BD REMOTA, EN CASO DE OBTENER REGISTROS DE BD REMOTA
-            * */
 
             mAPIService.getInventarioAgencia(new Objectparametros(
                     Integer.parseInt(userLogged.getEmpresa()), //Empresa
                     Integer.parseInt(userLogged.getSucursal()), //Sucursal
                     getFecha()
-//                    Integer.parseInt(userLogged.getId_usuario()) //Id usuario
+
             )).enqueue(new Callback<responseGetInventario>() {
                 @Override
                 public void onResponse(Call<responseGetInventario> call, Response<responseGetInventario> response) {
-                    /*
-                    * 1.CREAR UN METODO EN CONSULTAS_DB PARA REGISTRAR LOS ROWS OBTENIDOS DE BD REMOTO
-                    *   1.1- ENVIAR EL OBJETO RESPONSE.BODY() - COMO PARAMETRO
-                    *   1.2- DENTRO DE LA CONSULTA REALIZAR EL FOR EACH Y AGREGAR TODOS LOS REGISTROS
-                    * */
-
-                    //VALIDAR SI DATA ES NULL
-                    //REGISTRAR DATA REMOTO
+                   //REGISTRAR DATA REMOTO
                     boolean registrados = sync.registroRemotoALocal(response.body());
                     if(registrados) Log.d("LOG:==","Se han registrados rows remoto-local");
 
@@ -408,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }else{
             Toast.makeText(this, "La BD ya se encuentra actualizada.", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     public void cerrarSesion(){

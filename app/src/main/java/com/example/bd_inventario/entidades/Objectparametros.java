@@ -6,19 +6,27 @@ public class Objectparametros {
     int Empresa;
     int Sucursal;
     String Id_fecha;
+    String Auditor;
 
-    public Objectparametros(int empresa, int sucursal, String id_fecha) {
+    public Objectparametros(int empresa, int sucursal, String id_fecha, String auditor) {
         Empresa = empresa;
         Sucursal = sucursal;
         Id_fecha = id_fecha;
+        Auditor = auditor;
     }
 
     public int getEmpresa() {
         return Empresa;
     }
-
     public void setEmpresa(int empresa) {
         Empresa = empresa;
+    }
+
+    public String getAuditor() {
+        return Auditor;
+    }
+    public void setAuditor(String auditor) {
+        Auditor = auditor;
     }
 
     public int getSucursal() {

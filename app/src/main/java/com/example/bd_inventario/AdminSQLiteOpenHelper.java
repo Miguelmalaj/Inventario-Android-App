@@ -18,7 +18,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper{
         BaseDeDatos.execSQL(
                 "create table Inventario(" +
                         "Id_inventario integer primary key autoincrement, " +
-                        "VIN text unique, " +
+                        "VIN text, " +
                         "Id_fecha text, " +
                         "Nombre_ubicacion text, " +
                         "Empresa integer, "+
