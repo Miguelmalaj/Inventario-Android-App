@@ -187,16 +187,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .enqueue(new Callback<responseRegistrosInventario>() {
                             @Override
                             public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
-                                Log.i("RESPUESTA=","200");
+//                                Log.i("RESPUESTA=","200");
 
                                 if(response.body().getEstado() == 2){ //server response 2 si no hay registros
-                                    Log.i("RESPUESTA=",response.body().getMensaje());
+//                                    Log.i("RESPUESTA=",response.body().getMensaje());
                                     sincronizarPrimeraVez();
 
                                 }
 
                                 if(response.body().getEstado() == 1){ //server response 1 si hay registros
-                                    Log.i("RESPUESTA=",response.body().getMensaje());
+//                                    Log.i("RESPUESTA=",response.body().getMensaje());
                                     EliminarRegistrosRemotos();
 
                                 }
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             @Override
                             public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
-                                Log.i("RESPUESTA=","500");
+//                                Log.i("RESPUESTA=","500");
                                 Toast.makeText(MainActivity.this, "Error al conectar con servidor, verificar conexión VPN" , Toast.LENGTH_LONG).show();
                                 btnguardar.setEnabled(true);
                                 btnSync.setEnabled(true);
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if( VinScaneado != null){
             QRCapturado = "N";
 
-            if (VinScaneado.length() > 17) {
+            if (VinScaneado.length() >= 17) {
                 txtVin.setText(VinScaneado.substring(0, 17));
             } else {
                 txtVin.setText(VinScaneado);
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void EliminarRegistrosRemotos() {
-        Log.i("RESPUESTA=","accedimos a metodo sincrnoizarActualizar");
+//        Log.i("RESPUESTA=","accedimos a metodo sincrnoizarActualizar");
         String cadena = userLogged.getEmpresa() + "-" +userLogged.getSucursal() + "-"+getFecha()+ "-"+userLogged.getId_usuario()+"-"+userLogged.getAuditor();
 
         mAPIService.eliminarRegistrosDeHoy(cadena)
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sincronizarPrimeraVez() {
-        Log.i("RESPUESTA=", "accedimos a metodo sincrnoizarPrimeraVez");
+//        Log.i("RESPUESTA=", "accedimos a metodo sincrnoizarPrimeraVez");
         consultas_db queryLocal = new consultas_db(MainActivity.this, "Inventarios", null, 1);
         List<listaInventario> registrosInventarioHoy = queryLocal.getInventarioDeHoy(
                 Integer.parseInt(userLogged.getEmpresa()),
@@ -302,8 +302,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onResponse(Call<responseRegistrosInventario> call, Response<responseRegistrosInventario> response) {
-                        Log.i("RESPUESTA=","200");
-                        Log.i("RESPUESTA=",response.body().getMensaje());
+//                        Log.i("RESPUESTA=","200");
+//                        Log.i("RESPUESTA=",response.body().getMensaje());
 
                         if(response.body().getEstado() == 2){ //server response 2 si no hay registros
                             btnguardar.setEnabled(true);
@@ -319,8 +319,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onFailure(Call<responseRegistrosInventario> call, Throwable t) {
-                        Log.i("RESPUESTA=","500");
-                        Log.i("RESPUESTA=",t.getMessage());
+//                        Log.i("RESPUESTA=","500");
+//                        Log.i("RESPUESTA=",t.getMessage());
                         Toast.makeText(MainActivity.this, "Ocurrió un error con el servidor: No fue posible sincronizar" , Toast.LENGTH_LONG).show();
                         btnguardar.setEnabled(true);
                         btnSync.setEnabled(true);
@@ -420,8 +420,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String Auditor = userLogged.getAuditor();
 //        String QRCapturado = "N";
 
-        if ((!fecha_db.isEmpty()) && (!ubicacion_db.isEmpty()) && (!Vin_db.isEmpty())) {
+        if (Vin_db.length() < 17) {
+            Toast.makeText(MainActivity.this, "VIN incorrecto.", Toast.LENGTH_LONG).show();
+            txtVin.setText("");
+            return;
+        }
 
+        if ((!fecha_db.isEmpty()) && (!ubicacion_db.isEmpty()) && (!Vin_db.isEmpty())) {
             boolean isVINCreated = admin.isThisRegisterInBD(Vin_db,fecha_db,Empresa,Sucursal,Auditor);
 
             if(!isVINCreated) {
@@ -440,6 +445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else {
             Toast.makeText(this, "Favor de llenar todos los campos", Toast.LENGTH_LONG).show();
+
         }
 
         txtVin.setText("");
