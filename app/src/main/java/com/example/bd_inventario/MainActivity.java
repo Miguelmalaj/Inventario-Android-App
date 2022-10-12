@@ -421,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        String QRCapturado = "N";
 
         if (Vin_db.length() < 17) {
-            Toast.makeText(MainActivity.this, "VIN incorrecto.", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "VIN incorrecto. Favor de capturar el VIN completo.", Toast.LENGTH_LONG).show();
             txtVin.setText("");
             return;
         }
